@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weaving Safety Management System</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+:root{--bg:#f4f7f6;--panel:#fff;--panel2:#f8faf9;--text:#15201d;--muted:#71807a;--line:#dfe7e3;--brand:#176b55;--brand2:#dff2eb;--danger:#d14343;--danger2:#fde8e8;--warning:#c98215;--warning2:#fff0d6;--info:#3576c4;--info2:#e6f0fb;--shadow:0 8px 28px rgba(28,48,41,.07)}
+body.dark{--bg:#101714;--panel:#18211e;--panel2:#202b27;--text:#edf4f1;--muted:#9eaaa5;--line:#314039;--brand:#4ec59e;--brand2:#1d3b31;--danger2:#3c2222;--warning2:#3a2d18;--info2:#203248;--shadow:none}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}.app-shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;background:#12221d;color:#dbe9e4;padding:24px 16px;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:12px;padding:0 8px 25px}.brand-mark{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#62d0aa,#1f7258);display:grid;place-items:center;font-weight:800;color:white}.brand small{display:block;color:#89a49b;margin-top:2px}.sidebar nav{display:grid;gap:5px}.nav-item{border:0;background:transparent;color:#98aaa4;text-align:left;padding:12px 14px;border-radius:10px;cursor:pointer;display:flex;gap:12px;font-weight:600}.nav-item:hover,.nav-item.active{background:#20352e;color:white}.sidebar-foot{margin-top:auto;font-size:12px;color:#7f978e;padding:12px}.status-dot{display:inline-block;width:8px;height:8px;background:#48c493;border-radius:50%;margin-right:7px}.main{padding:0 28px 40px;min-width:0}.topbar{height:92px;display:flex;align-items:center;justify-content:space-between}.topbar h1{font-size:24px;margin:0}.topbar p{margin:5px 0 0;color:var(--muted);font-size:14px}.top-actions{display:flex;gap:10px}.avatar,.icon-btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;width:40px;height:40px;cursor:pointer}.avatar{border-radius:50%;background:var(--brand);color:white;border:0;font-weight:700}.mobile{display:none}.page{display:none}.page.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:20px}.compact{padding:14px 18px}.filters{display:flex;gap:14px;align-items:end;margin-bottom:18px}.filters label{display:grid;gap:6px;color:var(--muted);font-size:12px}.filters select,.upload-card select{min-width:150px}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}.kpi{display:flex;align-items:center;gap:16px}.kpi-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:800}.danger{background:var(--danger2);color:var(--danger)}.warning{background:var(--warning2);color:var(--warning)}.success{background:var(--brand2);color:var(--brand)}.info{background:var(--info2);color:var(--info)}.kpi small{color:var(--muted);display:block}.kpi strong{font-size:28px;display:block;margin:3px 0}.kpi em{font-size:12px;color:var(--muted);font-style:normal}.grid{display:grid;gap:16px;margin-bottom:16px}.two-one{grid-template-columns:2fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:repeat(2,1fr)}.chart-card{min-height:340px}.chart-card canvas{max-height:275px}.card-head{display:flex;align-items:start;justify-content:space-between;gap:15px;margin-bottom:14px}.card h3,.card h2{margin:0 0 4px}.card p{margin:0;color:var(--muted);font-size:14px}.link-btn{background:transparent;border:0;color:var(--brand);cursor:pointer;font-weight:700}.priority-list{display:grid;gap:10px}.priority-item{border:1px solid var(--line);border-radius:12px;padding:12px}.priority-item strong{font-size:14px}.priority-item small{display:flex;justify-content:space-between;margin-top:7px;color:var(--muted)}.badge{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700}.badge.open{background:var(--danger2);color:var(--danger)}.badge.progress{background:var(--warning2);color:var(--warning)}.badge.closed{background:var(--brand2);color:var(--brand)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:12px;border-bottom:1px solid var(--line)}td{padding:13px 12px;border-bottom:1px solid var(--line);font-size:13px;max-width:260px;overflow:hidden;text-overflow:ellipsis}tr:last-child td{border-bottom:0}.section-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.search{flex:1;max-width:420px}.search input,input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:9px;outline:none}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}.btn.primary{background:var(--brand);color:#fff}.btn.secondary{background:#213d34;color:white}.btn.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.full{width:100%}.mini-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}.mini-kpis small{color:var(--muted)}.mini-kpis strong{font-size:24px;display:block;margin-top:5px}.empty{text-align:center;padding:65px 20px}.empty>div{font-size:42px}.empty h3{margin:10px}.empty p{margin-bottom:18px}.hidden{display:none!important}.action-board{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.action-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}.action-card h3{font-size:15px;margin:8px 0}.action-card p{color:var(--muted);font-size:13px;min-height:36px}.action-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:16px}.progressbar{height:7px;background:var(--panel2);border-radius:99px;margin-top:12px;overflow:hidden}.progressbar span{display:block;height:100%;background:var(--brand)}.segmented{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}.segmented button{border:0;background:transparent;padding:8px 12px;border-radius:7px;color:var(--muted);cursor:pointer}.segmented button.active{background:var(--brand2);color:var(--brand);font-weight:700}.master-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}.master-card h3{display:flex;justify-content:space-between}.master-list{display:grid;gap:8px;margin-top:14px}.master-row{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:var(--panel2);border-radius:9px;font-size:13px}.master-row button,.row-actions button{border:0;background:transparent;color:var(--muted);cursor:pointer}.master-add{display:flex;gap:8px;margin-top:12px}.master-add input{padding:8px}.upload-card{text-align:center}.upload-icon{width:55px;height:55px;border-radius:15px;background:var(--brand2);color:var(--brand);display:grid;place-items:center;font-size:28px;margin:0 auto 15px}.upload-card select{margin:20px 0 12px}.dropzone{display:grid;gap:5px;border:1px dashed var(--brand);border-radius:13px;padding:28px;cursor:pointer;margin-bottom:12px}.dropzone input{display:none}.dropzone span{font-size:12px;color:var(--muted)}.export-options{display:grid;gap:10px;margin-top:20px}.export-card{display:flex;align-items:center;gap:13px;text-align:left;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:14px;cursor:pointer}.export-card span{font-size:22px}.export-card small{display:block;color:var(--muted);margin-top:3px}.modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center}.modal-backdrop{position:absolute;inset:0;background:rgba(8,16,13,.55)}.modal-panel{position:relative;width:min(850px,92vw);max-height:90vh;overflow:auto;background:var(--panel);border-radius:18px;padding:24px}.modal-head{display:flex;justify-content:space-between;margin-bottom:20px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.form-group{display:grid;gap:6px}.form-group.full{grid-column:1/-1}.form-group label{font-size:12px;color:var(--muted);font-weight:700}.form-group textarea{min-height:90px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}.toast{position:fixed;right:24px;bottom:24px;background:#12221d;color:white;padding:13px 18px;border-radius:10px;transform:translateY(100px);opacity:0;transition:.25s;z-index:40}.toast.show{transform:translateY(0);opacity:1}.muted{color:var(--muted)}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.three,.master-grid{grid-template-columns:1fr 1fr}.action-board{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.app-shell{display:block}.sidebar{position:fixed;z-index:30;transform:translateX(-100%);transition:.25s;width:250px}.sidebar.open{transform:translateX(0)}.main{padding:0 14px 30px}.mobile{display:inline-block}.topbar>div:first-child{display:grid;grid-template-columns:44px 1fr;column-gap:8px}.topbar p{grid-column:2}.kpi-grid,.two-one,.three,.two,.master-grid,.action-board,.mini-kpis{grid-template-columns:1fr}.filters{overflow:auto}.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.section-actions{align-items:stretch;flex-wrap:wrap}.section-actions .search{max-width:none;width:100%}}
+
+.p2k3-formulas{margin-bottom:18px}.p2k3-formulas .metric-card strong{font-size:14px;line-height:1.35}
+.button-row,.table-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mini-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:700}.mini-btn:hover{background:var(--surface-2)}.danger-text{color:#dc2626}
+.calculation-preview{padding:16px;border:1px dashed var(--accent);background:rgba(59,130,246,.07);border-radius:12px;display:flex;flex-direction:column;gap:4px}.calculation-preview strong{font-size:24px}.empty.compact{padding:22px}
+@media(max-width:780px){.p2k3-formulas{grid-template-columns:1fr 1fr}.button-row{width:100%}.button-row .btn{flex:1}}
+.annual-trend-grid{margin-top:18px}.annual-summary-card{margin-bottom:16px}.annual-summary-card td:first-child{color:var(--brand)}
+@media(max-width:980px){.annual-trend-grid{grid-template-columns:1fr}}
+.p2k3-accident-trend-card{margin-bottom:18px}
+.compact-filter{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.compact-filter select{min-width:190px}
+@media(max-width:640px){.compact-filter{width:100%;align-items:flex-start;flex-direction:column}.compact-filter select{width:100%;min-width:0}}
+
+
+/* V7 dashboard refresh */
+:root{--bg:#f7f2ec;--panel:#fffdf9;--panel2:#f5eee7;--text:#302b28;--muted:#8b8179;--line:#e8ded4;--brand:#9b735e;--brand2:#f0e1d7;--danger:#c96d61;--danger2:#f8e5e1;--warning:#c5964f;--warning2:#f8ecd7;--info:#708da3;--info2:#e5edf2;--shadow:0 12px 34px rgba(92,66,49,.08)}
+body.dark{--bg:#171411;--panel:#211c19;--panel2:#2a2420;--text:#f5eee8;--muted:#b6a89f;--line:#403730;--brand:#d2a58b;--brand2:#3a2d27;--danger:#e28b80;--danger2:#432a27;--warning:#d4b16e;--warning2:#3b3123;--info:#91adbf;--info2:#28353d;--shadow:none}
+body{background:radial-gradient(circle at 88% 8%,rgba(218,187,163,.18),transparent 25%),var(--bg);transition:background .25s}
+.sidebar{background:linear-gradient(180deg,#30251f 0%,#211b17 100%);color:#f4e9e0}.brand-mark{background:linear-gradient(135deg,#d8b39d,#8d624d);box-shadow:0 8px 18px rgba(0,0,0,.12)}.brand small{color:#bba99d}.nav-item{color:#b9aaa0}.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.09);color:#fff}.status-dot{background:#a9c7b2}.main{padding:0 32px 46px}.topbar{height:98px}.topbar h1{font-size:26px;letter-spacing:-.02em}.topbar p{color:var(--muted)}
+.card{border-radius:20px;border-color:var(--line);box-shadow:var(--shadow);padding:21px}.card:hover{box-shadow:0 15px 40px rgba(92,66,49,.10)}.filters.card{background:rgba(255,253,249,.78);backdrop-filter:blur(8px);border-radius:18px}.kpi-grid{gap:14px;margin-bottom:18px}.kpi{min-height:108px;position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-35px;top:-35px;background:var(--brand2);opacity:.55}.kpi-icon{width:46px;height:46px;border-radius:14px;z-index:1}.kpi strong{font-size:30px;letter-spacing:-.03em}.kpi small,.kpi em{position:relative;z-index:1}.eyebrow{display:block;font-size:10px;letter-spacing:.14em;font-weight:800;color:var(--brand);margin-bottom:5px}.soft-pill{font-size:11px;font-weight:800;color:var(--brand);background:var(--brand2);padding:7px 10px;border-radius:999px}.dashboard-main-grid{align-items:stretch}.annual-card{min-height:390px}.bodymap-card{min-height:390px;overflow:hidden}.map-sparkle{width:32px;height:32px;display:grid;place-items:center;border-radius:11px;background:var(--brand2);color:var(--brand);font-size:16px}.dashboard-secondary-grid .chart-card{min-height:335px}.chart-card canvas{max-height:265px}
+.bodymap{display:grid;grid-template-columns:1fr 1.05fr;gap:10px;align-items:center;min-height:300px}.bodymap-figure{position:relative;min-height:280px;display:grid;place-items:center}.bodymap-figure svg{width:210px;max-width:100%;height:280px;overflow:visible}.bodymap-outline{fill:#ead9cc;stroke:#9f806d;stroke-width:2}.bodymap-shirt{fill:#c7a892}.bodymap-pants{fill:#a98773}.bodymap-skin{fill:#f0c9b3;stroke:#9f806d;stroke-width:1.5}.body-zone{cursor:pointer;transition:transform .18s,filter .18s,fill .18s;transform-box:fill-box;transform-origin:center}.body-zone:hover{filter:brightness(.95);transform:scale(1.08)}.body-zone.active{fill:#c97866;filter:drop-shadow(0 5px 6px rgba(174,95,77,.25))}.bodymap-side{display:grid;gap:8px}.body-stat{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:13px;background:var(--panel2);border:1px solid var(--line);cursor:pointer;transition:.18s}.body-stat:hover,.body-stat.active{transform:translateX(-2px);border-color:var(--brand);background:var(--brand2)}.body-stat-label{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}.body-stat-dot{width:8px;height:8px;border-radius:50%;background:#c8ad9b}.body-stat.active .body-stat-dot{background:var(--danger)}.body-stat strong{font-size:13px}.bodymap-highlight{grid-column:1/-1;margin-top:2px;padding:11px 13px;border-radius:14px;background:linear-gradient(135deg,var(--brand2),var(--panel2));display:flex;align-items:center;justify-content:space-between;gap:10px}.bodymap-highlight small{display:block;color:var(--muted);font-size:11px}.bodymap-highlight b{font-size:15px}.bodymap-highlight .percent{font-size:22px;color:var(--brand);font-weight:850}
+.priority-item{border-radius:14px;background:var(--panel2);border-color:var(--line);transition:.18s}.priority-item:hover{transform:translateY(-1px);border-color:var(--brand)}.table-wrap{border-radius:14px}.table-wrap table tbody tr:hover{background:var(--panel2)}
+@media(max-width:900px){.bodymap{grid-template-columns:1fr 1fr}.bodymap-figure svg{width:180px}}
+@media(max-width:760px){.main{padding:0 14px 30px}.bodymap{grid-template-columns:1fr}.bodymap-figure{min-height:250px}.bodymap-highlight{grid-column:auto}.bodymap-side{grid-row:auto}.topbar h1{font-size:22px}}
+
+/* Supabase authentication and cloud sync */
+.auth-gate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:22px;background:rgba(35,27,22,.72);backdrop-filter:blur(8px)}
+.auth-gate.hidden{display:none}.auth-panel{width:min(440px,100%);background:var(--panel,#fffdf9);color:var(--text,#302b28);border:1px solid var(--line,#e8ded4);border-radius:22px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.25)}
+.auth-panel h2{margin:0 0 8px;font-size:23px}.auth-panel p{color:var(--muted);line-height:1.55;margin:0 0 20px}.auth-panel label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}.auth-panel input{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text)}.auth-panel button{width:100%;margin-top:14px}.auth-error{color:#b84040;font-size:12px;min-height:18px;margin-top:10px}.cloud-user{font-size:11px;color:var(--muted);margin-right:10px}.cloud-status{font-size:11px;color:#b9aaa0;padding:0 8px 10px;line-height:1.4}.cloud-status strong{color:#e9d4c6;font-weight:700}.top-actions{display:flex;align-items:center;gap:8px}.logout-btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:8px 11px;border-radius:10px;cursor:pointer;font-size:12px}
+
+
+/* Public viewer mode: cloud data is read-only */
+body.viewer-mode #logoutBtn{display:none}
+body.viewer-mode .auth-panel .btn.primary{display:block!important}
+body.viewer-mode .cloud-user{color:#9ad9bf;font-weight:700}
+body.viewer-mode #authGate .auth-panel .btn.primary{display:block!important}
+body.viewer-mode .btn.primary,body.viewer-mode .btn.secondary,
+body.viewer-mode .section-actions .btn,body.viewer-mode .row-actions .btn,
+body.viewer-mode .icon-btn:not(#themeBtn),body.viewer-mode .link-btn{display:none!important}
+body.viewer-mode .viewer-banner{display:flex}
+.viewer-banner{display:none;align-items:center;gap:8px;margin:0 0 14px;padding:10px 14px;border:1px solid #b7dfca;border-radius:12px;background:#edf9f2;color:#216044;font-size:12px;font-weight:700}
+
+</style>
+
+<style id="safety-insight-style">
+.safety-insight{margin:18px 0;padding:20px;border:1px solid #e7d8c5;border-radius:22px;background:linear-gradient(135deg,#fffaf3,#f5eee4);color:#4a382b}
+.safety-insight .si-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.safety-insight .si-title{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.safety-insight .si-sub{font-size:12px;color:#8b7664;margin-top:4px}
+.safety-insight .si-status{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;font-size:12px;font-weight:800;background:#eee2d3;color:#765331}
+.safety-insight .si-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-top:16px}
+.safety-insight .si-message{padding:15px 16px;border-radius:16px;background:#fff;border:1px solid #eadfD2;line-height:1.65;font-size:13px}
+.safety-insight .si-priority{padding:15px 16px;border-radius:16px;background:#f0e6d9;border:1px solid #e4d2bd}
+.safety-insight .si-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#92775f;margin-bottom:7px}
+.safety-insight .si-priority strong{display:block;font-size:15px;line-height:1.4}
+.safety-insight .si-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.safety-insight .si-metric{background:#fff;border:1px solid #eadfd2;border-radius:14px;padding:12px}
+.safety-insight .si-metric b{display:block;font-size:20px;line-height:1.2;margin-bottom:4px}
+.safety-insight .si-metric span{font-size:11px;color:#8b7664}
+.safety-insight.good .si-status{background:#dfeee2;color:#356342}
+.safety-insight.warn .si-status{background:#f8e9c8;color:#8a5a18}
+.safety-insight.bad .si-status{background:#f6dcd5;color:#963f2e}
+@media(max-width:700px){.safety-insight .si-grid{grid-template-columns:1fr}.safety-insight .si-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">WS</div><div><strong>Weaving Safety</strong><small>Management System</small></div></div>
+      <nav id="nav">
+        <button class="nav-item active" data-page="dashboard">▦ <span>Dashboard</span></button>
+        <button class="nav-item" data-page="accidents">✚ <span>Kecelakaan Kerja</span></button>
+        <button class="nav-item" data-page="nearmiss">⚠ <span>Near Miss</span></button>
+        <button class="nav-item" data-page="actions">✓ <span>Corrective Action</span></button>
+        <button class="nav-item" data-page="safety">🛡 <span>Safety Management</span></button>
+        <button class="nav-item" data-page="p2k3">⌁ <span>P2K3 Monitoring</span></button>
+        <button class="nav-item" data-page="master">⚙ <span>Master Data</span></button>
+        <button class="nav-item" data-page="datahub">⇅ <span>Import & Export</span></button>
+      </nav>
+      <div class="sidebar-foot"><span class="status-dot"></span> <span id="storageLabel">Menunggu koneksi cloud</span><div id="cloudStatus" class="cloud-status">Belum terhubung</div></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><button id="menuBtn" class="icon-btn mobile">☰</button><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Ringkasan keselamatan Departemen Weaving</p></div>
+        <div class="top-actions"><span id="cloudUser" class="cloud-user"></span><button id="editorLoginBtn" class="logout-btn" type="button">Login Editor</button><button id="logoutBtn" class="logout-btn" type="button">Keluar</button><button id="themeBtn" class="icon-btn">◐</button><button class="avatar">VF</button></div>
+      </header>
+
+      <div class="viewer-banner" id="viewerBanner">◉ MODE VIEWER · Data cloud diperbarui otomatis setiap 15 detik. Akses hanya-baca.</div>
+      <section id="dashboard" class="page active">
+        <div class="filters card compact">
+          <label>Tahun<select id="yearFilter"></select></label>
+          <label>Bagian<select id="deptFilter"><option value="">Semua bagian</option></select></label>
+          <label>Shift<select id="shiftFilter"><option value="">Semua shift</option></select></label>
+          <button id="resetFilter" class="btn ghost">Reset filter</button>
+        </div>
+        <div class="kpi-grid">
+          <article class="kpi card"><span class="kpi-icon danger">✚</span><div><small>Total Kecelakaan</small><strong id="kpiAccidents">0</strong><em id="kpiAccidentNote">Semua periode</em></div></article>
+          <article class="kpi card"><span class="kpi-icon warning">⚠</span><div><small>Total Near Miss</small><strong id="kpiNearmiss">0</strong><em>Pelaporan aktif</em></div></article>
+          <article class="kpi card"><span class="kpi-icon success">✓</span><div><small>Action Completion</small><strong id="kpiCompletion">0%</strong><em id="kpiActionNote">0 action terbuka</em></div></article>
+          <article class="kpi card"><span class="kpi-icon info">◷</span><div><small>Hari Tanpa Kecelakaan</small><strong id="kpiDays">0</strong><em>Sejak kejadian terakhir</em></div></article>
+        </div>
+        <div class="grid two-one dashboard-main-grid">
+          <article class="card chart-card annual-card"><div class="card-head"><div><span class="eyebrow">SAFETY OVERVIEW</span>
+<div id="safetyInsight" class="safety-insight" aria-live="polite">
+  <div class="si-head">
+    <div>
+      <div class="si-title">Posisi Keselamatan Weaving Saat Ini</div>
+      <div class="si-sub">Insight otomatis berdasarkan filter dashboard dan data yang tersimpan.</div>
+    </div>
+    <div id="siStatus" class="si-status">● Belum cukup data</div>
+  </div>
+  <div class="si-grid">
+    <div id="siMessage" class="si-message">Belum ada data yang cukup untuk menyusun insight keselamatan.</div>
+    <div class="si-priority">
+      <div class="si-label">Prioritas Saat Ini</div>
+      <strong id="siPriority">Lengkapi data kecelakaan, near miss, inspeksi, dan corrective action.</strong>
+    </div>
+  </div>
+  <div class="si-metrics">
+    <div class="si-metric"><b id="siAccident">0</b><span>Kecelakaan kerja</span></div>
+    <div class="si-metric"><b id="siNearMiss">0</b><span>Near miss</span></div>
+    <div class="si-metric"><b id="siOpenAction">0</b><span>Action masih open</span></div>
+    <div class="si-metric"><b id="siOverdue">0</b><span>Temuan overdue</span></div>
+  </div>
+</div>
+
+<h3>Tren Kecelakaan Tahunan</h3><p id="annualTrendNote">Total kejadian seluruh bagian per tahun</p></div><span class="soft-pill">Weaving</span></div><canvas id="dashboardAnnualTrendChart"></canvas></article>
+          <article class="card bodymap-card"><div class="card-head"><div><span class="eyebrow">INJURY MAP</span><h3>Bagian Tubuh Terdampak</h3><p>Area tubuh yang paling sering mengalami cedera</p></div><span class="map-sparkle">✦</span></div><div id="bodyPartMap"></div></article>
+        </div>
+        <div class="grid two dashboard-secondary-grid">
+          <article class="card chart-card"><div class="card-head"><div><span class="eyebrow">MONTHLY TREND</span><h3>Tren Kejadian Bulanan</h3><p>Kecelakaan dan near miss</p></div></div><canvas id="trendChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><div><span class="eyebrow">ROOT CAUSE</span><h3>Penyebab Dominan</h3><p>Distribusi penyebab kecelakaan</p></div></div><canvas id="causeChart"></canvas></article>
+        </div>
+        <div class="grid three">
+          <article class="card chart-card"><div class="card-head"><div><h3>Kejadian per Bagian</h3><p>Bagian dengan insiden terbanyak</p></div></div><canvas id="deptChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><div><h3>Distribusi Shift</h3><p>Waktu kejadian berdasarkan shift</p></div></div><canvas id="shiftChart"></canvas></article>
+          <article class="card"><div class="card-head"><div><h3>Prioritas Tindak Lanjut</h3><p>Action paling mendesak</p></div><button class="link-btn" data-go="actions">Lihat semua</button></div><div id="priorityList" class="priority-list"></div></article>
+        </div>
+        <article class="card"><div class="card-head"><div><h3>Insiden Terbaru</h3><p>Riwayat terbaru berdasarkan data Excel</p></div><button class="link-btn" data-go="accidents">Buka data</button></div><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Nama</th><th>Bagian</th><th>Kejadian</th><th>Shift</th><th>Penyebab</th></tr></thead><tbody id="recentAccidents"></tbody></table></div></article>
+      </section>
+
+      <section id="accidents" class="page">
+        <div class="section-actions"><div class="search"><input id="accidentSearch" placeholder="Cari nama, bagian, kejadian..." /></div><button class="btn secondary" data-export="accidents">Export Excel</button><button class="btn primary" data-add="accident">+ Tambah Kecelakaan</button></div>
+        <article class="card"><div class="table-wrap"><table><thead><tr><th>No.</th><th>Tanggal</th><th>Nama</th><th>Shift</th><th>Lokasi Cedera</th><th>Kejadian</th><th>Bagian</th><th>Area</th><th>Penyebab</th><th></th></tr></thead><tbody id="accidentTable"></tbody></table></div></article>
+      </section>
+
+      <section id="nearmiss" class="page">
+        <div class="section-actions"><div class="search"><input id="nearmissSearch" placeholder="Cari near miss..." /></div><button class="btn secondary" data-export="nearmiss">Export Excel</button><button class="btn primary" data-add="nearmiss">+ Laporkan Near Miss</button></div>
+        <div class="mini-kpis"><div class="card"><small>Total</small><strong id="nmTotal">0</strong></div><div class="card"><small>Open</small><strong id="nmOpen">0</strong></div><div class="card"><small>Overdue</small><strong id="nmOverdue">0</strong></div><div class="card"><small>Closed</small><strong id="nmClosed">0</strong></div></div>
+        <article class="card"><div id="emptyNearmiss" class="empty"><div>⚠</div><h3>Belum ada data near miss</h3><p>Tambahkan laporan pertama atau import dari Excel.</p><button class="btn primary" data-add="nearmiss">+ Tambah Near Miss</button></div><div class="table-wrap"><table id="nearmissTableWrap"><thead><tr><th>No.</th><th>Tanggal</th><th>Bagian</th><th>Area</th><th>Kategori</th><th>Kronologi</th><th>PIC</th><th>Deadline</th><th>Status</th><th></th></tr></thead><tbody id="nearmissTable"></tbody></table></div></article>
+      </section>
+
+      <section id="actions" class="page">
+        <div class="section-actions"><div class="segmented"><button class="active" data-action-filter="all">Semua</button><button data-action-filter="Open">Open</button><button data-action-filter="In Progress">Progress</button><button data-action-filter="Closed">Closed</button></div><button class="btn secondary" data-export="actions">Export Excel</button><button class="btn primary" data-add="action">+ Tambah Action</button></div>
+        <div id="actionBoard" class="action-board"></div>
+      </section>
+
+      <section id="safety" class="page">
+        <div class="section-actions"><div><h2>Safety Management</h2><p class="muted">Investigasi kecelakaan, safety inspection, dan laporan bulanan manajemen.</p></div><div class="button-row"><button class="btn secondary" id="generateSafetyReport">📄 Generate Monthly Report</button><button class="btn ghost" id="addInspection">+ Safety Inspection</button><button class="btn primary" id="addInvestigation">+ Investigasi Kecelakaan</button></div></div>
+        <div class="mini-kpis"><div class="card"><small>Investigasi Open</small><strong id="smInvOpen">0</strong></div><div class="card"><small>Inspection Open</small><strong id="smInsOpen">0</strong></div><div class="card"><small>Temuan Overdue</small><strong id="smInsOverdue">0</strong></div><div class="card"><small>Action Open</small><strong id="smActionOpen">0</strong></div></div>
+        <div class="grid two">
+          <article class="card"><div class="card-head"><div><h3>Investigasi Kecelakaan</h3><p>Analisis penyebab sampai root cause dan rekomendasi.</p></div></div><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Kejadian</th><th>Root Cause</th><th>Rekomendasi</th><th>Status</th><th></th></tr></thead><tbody id="investigationTable"></tbody></table></div></article>
+          <article class="card"><div class="card-head"><div><h3>Safety Inspection</h3><p>Temuan preventif sebelum menjadi kecelakaan.</p></div></div><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Area</th><th>Temuan</th><th>Risiko</th><th>PIC</th><th>Deadline</th><th>Status</th><th></th></tr></thead><tbody id="inspectionTable"></tbody></table></div></article>
+        </div>
+        <article class="card"><div class="card-head"><div><h3>Monthly Safety Report</h3><p>Pilih periode untuk membuat ringkasan yang siap dicetak.</p></div></div><div class="filters card compact"><label>Bulan<select id="reportMonth"><option value="">Semua bulan</option><option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select></label><label>Tahun<select id="reportYear"></select></label><label>Bagian<select id="reportDept"><option value="">Semua bagian</option></select></label></div></article>
+      </section>
+      
+      <section id="p2k3" class="page">
+        <div class="section-actions">
+          <div><h2>Monitoring Kinerja K3</h2><p class="muted">Input data dasar bulanan—indikator dihitung otomatis.</p></div>
+          <div class="button-row"><button class="btn secondary" data-export="p2k3">Export Excel</button><button id="addP2K3" class="btn primary">+ Input Monitoring</button></div>
+        </div>
+        <div class="metric-grid p2k3-formulas">
+          <article class="metric-card"><span>Total Jam Kerja</span><strong>Orang × Hari × Jam Efektif</strong><small>Dihitung otomatis</small></article>
+          <article class="metric-card"><span>Frequency Rate</span><strong>Insiden × 1.000.000 ÷ Jam</strong><small>FR</small></article>
+          <article class="metric-card"><span>Severity Rate</span><strong>Hari Hilang × 1.000.000 ÷ Jam</strong><small>SR</small></article>
+          <article class="metric-card"><span>Incident Rate</span><strong>Insiden × 100 ÷ Orang</strong><small>IR</small></article>
+        </div>
+        <article class="card chart-card p2k3-accident-trend-card">
+          <div class="card-head">
+            <div><h3>Tren Kecelakaan Tahunan per Bagian</h3><p id="p2k3AnnualTrendNote">Total kejadian seluruh bagian per tahun</p></div>
+            <label class="compact-filter">Bagian<select id="p2k3DeptTrendFilter"><option value="">Semua bagian</option></select></label>
+          </div>
+          <canvas id="p2k3DeptAnnualChart"></canvas>
+        </article>
+        <div class="grid two annual-trend-grid">
+          <article class="card chart-card"><div class="card-head"><div><h3>Tren Kecelakaan & Hari Hilang Tahunan</h3><p>Perbandingan data monitoring K3 dari tahun ke tahun</p></div></div><canvas id="annualIncidentChart"></canvas></article>
+          <article class="card chart-card"><div class="card-head"><div><h3>Tren Indikator K3 Tahunan</h3><p>FR, SR, IR, dan ATLR dihitung otomatis dari rekap bulanan</p></div></div><canvas id="annualRateChart"></canvas></article>
+        </div>
+        <article class="card annual-summary-card"><div class="card-head"><div><h3>Rekap Tahunan</h3><p>Ringkasan otomatis berdasarkan seluruh bulan yang telah diinput</p></div></div><div class="table-wrap"><table><thead><tr><th>Tahun</th><th>Rata-rata Orang</th><th>Total Jam Kerja</th><th>Kecelakaan</th><th>Hari Hilang</th><th>FR</th><th>SR</th><th>IR</th><th>ATLR</th></tr></thead><tbody id="annualP2K3Table"></tbody></table></div></article>
+        <article class="card"><div class="card-head"><div><h3>Monitoring Bulanan</h3><p>Data dasar dan hasil perhitungan setiap periode</p></div></div><div class="table-wrap"><table><thead><tr><th>Periode</th><th>Jumlah Orang</th><th>Hari Kerja</th><th>Jam Efektif/Hari</th><th>Total Jam Kerja</th><th>Kecelakaan</th><th>Hari Hilang</th><th>FR</th><th>SR</th><th>IR</th><th>ATLR</th><th>Aksi</th></tr></thead><tbody id="p2k3Table"></tbody></table></div></article>
+        <div id="p2k3Modal" class="modal hidden" role="dialog" aria-modal="true">
+          <div class="modal-card">
+            <div class="modal-head"><div><h3 id="p2k3ModalTitle">Input Monitoring K3</h3><p class="muted">Isi data dasar. Total jam kerja dan indikator dihitung otomatis.</p></div><button id="closeP2K3Modal" class="icon-btn" aria-label="Tutup">×</button></div>
+            <form id="p2k3Form" class="form-grid">
+              <label>Tahun<input name="year" type="number" min="2020" max="2100" required /></label>
+              <label>Bulan<select name="month" required><option value="">Pilih bulan</option><option>Januari</option><option>Februari</option><option>Maret</option><option>April</option><option>Mei</option><option>Juni</option><option>Juli</option><option>Agustus</option><option>September</option><option>Oktober</option><option>November</option><option>Desember</option></select></label>
+              <label>Jumlah Orang<input name="employees" type="number" min="0" step="1" required /></label>
+              <label>Jumlah Hari Kerja<input name="workingDays" type="number" min="0" step="1" required /></label>
+              <label>Jam Kerja Efektif/Hari<input name="effectiveHours" type="number" min="0" max="24" step="0.01" value="7" required /></label>
+              <label>Jumlah Kecelakaan<input name="incidents" type="number" min="0" step="1" value="0" required /></label>
+              <label>Jumlah Hari Hilang<input name="lostDays" type="number" min="0" step="1" value="0" required /></label>
+              <div class="calculation-preview full"><span>Perkiraan Total Jam Kerja</span><strong id="p2k3HoursPreview">0 jam</strong><small>Jumlah orang × hari kerja × jam kerja efektif per hari</small></div>
+              <div class="form-actions full"><button type="button" id="cancelP2K3" class="btn secondary">Batal</button><button type="submit" class="btn primary">Simpan Monitoring</button></div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="master" class="page">
+        <div class="master-intro card"><div><h2>Master Data</h2><p>Kelola pilihan yang dipakai pada semua form. Data nonaktif tetap tersimpan pada riwayat.</p></div></div>
+        <div id="masterGrid" class="master-grid"></div>
+      </section>
+
+      <section id="datahub" class="page">
+        <div class="grid two">
+          <article class="card upload-card"><div class="upload-icon">⇧</div><h2>Import dari Excel</h2><p>Gunakan template standar. Sistem akan menampilkan preview dan validasi sebelum data disimpan.</p><select id="importType"><option value="accidents">Kecelakaan Kerja</option><option value="nearmiss">Near Miss</option><option value="actions">Corrective Action</option><option value="p2k3">P2K3 Monitoring</option></select><label class="dropzone"><input id="importFile" type="file" accept=".xlsx,.xls,.csv" /><strong>Pilih file Excel</strong><span>atau tarik file ke area ini</span></label><button id="downloadTemplate" class="btn ghost full">Download Template Excel</button></article>
+          <article class="card"><h2>Export Data</h2><p>Pilih modul, lalu unduh data terbaru dalam format Excel.</p><div class="export-options"><button class="export-card" data-export="accidents"><span>✚</span><div><strong>Kecelakaan Kerja</strong><small id="exportAccCount">0 baris</small></div></button><button class="export-card" data-export="nearmiss"><span>⚠</span><div><strong>Near Miss</strong><small id="exportNmCount">0 baris</small></div></button><button class="export-card" data-export="actions"><span>✓</span><div><strong>Corrective Action</strong><small id="exportActionCount">0 baris</small></div></button><button class="export-card" data-export="all"><span>▦</span><div><strong>Semua Data</strong><small>Multi-sheet workbook</small></div></button></div></article>
+        </div>
+        <article id="importPreviewCard" class="card hidden"><div class="card-head"><div><h3>Preview Import</h3><p id="importSummary"></p></div><div><button id="cancelImport" class="btn ghost">Batal</button><button id="confirmImport" class="btn primary">Import Data</button></div></div><div class="table-wrap"><table><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div></article>
+      </section>
+    </main>
+  </div>
+
+  <div id="modal" class="modal hidden"><div class="modal-backdrop" data-close></div><div class="modal-panel"><div class="modal-head"><div><h2 id="modalTitle">Tambah Data</h2><p id="modalSubtitle"></p></div><button class="icon-btn" data-close>×</button></div><form id="dataForm"><div id="formFields" class="form-grid"></div><div class="modal-actions"><button type="button" class="btn ghost" data-close>Batal</button><button type="submit" class="btn primary">Simpan Data</button></div></form></div></div>
+  <div id="authGate" class="auth-gate">
+    <form id="authForm" class="auth-panel">
+      <div class="eyebrow">WEAVING SAFETY MANAGEMENT</div>
+      <h2>Masuk ke akun</h2>
+      <p>Gunakan akun Supabase VANIA PROJECT. Setelah masuk, data akan tersimpan di cloud dan dapat dibuka dari perangkat lain.</p>
+      <label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="username" required placeholder="nama@email.com" />
+      <label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" required placeholder="Password akun" />
+      <button id="loginBtn" class="btn primary" type="submit">Masuk</button>
+      <button id="backViewerBtn" class="btn ghost" type="button">Kembali ke Viewer</button>
+      <div id="authError" class="auth-error" role="alert"></div>
+    </form>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script>
+const seedAccidents = [
+{no:1,date:'2023-09-01',name:'Ipin',shift:'Siang',bodyPart:'Jari Tangan',incident:'Tertimpa roll kain',chronology:'Pada saat mengangkat roll berisi kain, roll kain terjatuh sehingga menimpa tangan.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:2,date:'2024-03-01',name:'Sena Satriana',shift:'Siang',bodyPart:'Jari Tangan',incident:'Terjepit antara sisir dan mesin',chronology:'Salah menekan tombol reverse, seharusnya menekan tombol start di mesin A18. Sehingga telunjuk tangan kanan terjepit sisir.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:3,date:'2024-03-01',name:'Didin',shift:'Pagi',bodyPart:'Kaki',incident:'Terperosok ke lorong',chronology:'Tutup lorong besi sudah patah, sehingga pada saat diinjak, kaki terperosok ke dalam lubang.',department:'MTC Loom',area:'Produksi Loom',cause:'Infrastructure'},
+{no:4,date:'2024-07-01',name:'Asep Irvan',shift:'Pagi',bodyPart:'Dada',incident:'Terjepit di antara celah mesin',chronology:'Pada saat memasang planeless rotary cylinder dryer mesin Sizing Karl Mayer, posisi badan masuk ke dalam celah mesin yang sempit.',department:'MTC Persiapan',area:'Persiapan',cause:'Human Error'},
+{no:5,date:'2024-08-01',name:'Kastolan',shift:'Pagi',bodyPart:'Jari Tangan',incident:'Terkena jatuhan tutup blower',chronology:'Saat baut pengunci tutup blower dilepas, pengganjal tersenggol dan terlepas sehingga tutup blower menimpa ibu jari tangan kiri.',department:'MTC Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:6,date:'2024-08-01',name:'Anjas Santika Sodikin',shift:'Pagi',bodyPart:'Jari Kaki',incident:'Terlindas roda beam truck',chronology:'Tidak sengaja menekan tombol start, sehingga beam truck berjalan mundur dan ibu jari kaki kanan terlindas.',department:'Persiapan',area:'Persiapan',cause:'Human Error'},
+{no:7,date:'2024-09-01',name:'Yayan Nugraha',shift:'Pagi',bodyPart:'Jari Tangan',incident:'Terjepit beam',chronology:'Pada saat menurunkan beam kosong di area sempit, tangan terjepit di antara beam dan box.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:8,date:'2024-11-01',name:'Tria Apriani',shift:'Siang',bodyPart:'Jari Tangan',incident:'Terjepit antara sisir dan mesin',chronology:'Salah menekan tombol reverse, seharusnya tombol start di mesin G06 sehingga telunjuk tangan kanan terjepit sisir.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:9,date:'2025-02-01',name:'Muhammad Virgiawan Yudiana',shift:'Pagi',bodyPart:'Kepala',incident:'Terbentur pipa pembuangan Cooker',chronology:'Pada saat perbaikan saluran pipa pembuangan di area cooker mesin Sizing Sucker 1, kepala bagian atas terbentur pipa.',department:'MTC Persiapan',area:'Persiapan',cause:'Human Error'},
+{no:10,date:'2025-03-01',name:'Irfan Muhammad Sutisna',shift:'Siang',bodyPart:'Jari Tangan',incident:'Terjepit antara sisir dan mesin',chronology:'Pada saat perbaikan filing detector mesin Delta unit C14, sisir bergerak maju sehingga jari telunjuk kanan terjepit.',department:'MTC Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:11,date:'2025-03-01',name:'Haris (CABANA)',shift:'Pagi',bodyPart:'Tangan',incident:'Terjepit antara sisir dan mesin',chronology:'Pada saat pembersihan debu di mesin G13, mesin bergerak slow motion sehingga tangan terjepit sisir.',department:'LAIN-LAIN',area:'Produksi Loom',cause:'Human Error'},
+{no:12,date:'2025-04-01',name:"Ma'mun Nawawi",shift:'Pagi',bodyPart:'Jari Tangan',incident:'Tersayat cutter',chronology:'Saat membongkar benang dari karung menggunakan cutter, tangan tidak sengaja tersayat dan dirujuk ke RS Al-Ihsan.',department:'Persiapan',area:'Persiapan',cause:'Human Error'},
+{no:13,date:'2025-05-01',name:'Wildan Heriyawan',shift:'Pagi',bodyPart:'Jari Tangan',incident:'Terjepit antara sisir dan mesin',chronology:'Pada saat mesin A12 gagal start dan mengambil benang pakan, sisir bergerak lalu jari terjepit.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:14,date:'2025-05-01',name:'Hendra Wahyudin',shift:'Siang',bodyPart:'Jari Tangan',incident:'Terjepit antara sisir dan mesin',chronology:'Setelah mengambil sisa benang pakan di mesin E06, operator salah fokus sehingga jari terjepit saat mesin bergerak.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:15,date:'2025-08-01',name:'Wawa Nugraha',shift:'Siang',bodyPart:'Kaki',incident:'Terbentur beam truck',chronology:'Saat menjalankan beam truck mundur, terjadi benturan dengan beam truck lain dan korban dirujuk ke RS Al-Ihsan.',department:'Persiapan',area:'Persiapan',cause:'Human Error'},
+{no:16,date:'2025-10-01',name:'Teti Budiarti',shift:'Malam',bodyPart:'Tangan',incident:'Teriris pisau',chronology:'Pada saat membersihkan benang pada mesin, pisau yang dipegang tidak sengaja mengenai tangan kiri.',department:'Persiapan',area:'Persiapan',cause:'Human Error'},
+{no:17,date:'2025-09-01',name:'Hani Yanuarti',shift:'Malam',bodyPart:'Hidung',incident:'Tertimpa pintu',chronology:'Saat beristirahat di musala, pintu terlepas dari rel dan menimpa korban.',department:'Produksi Loom',area:'Produksi Loom',cause:'Infrastructure'},
+{no:18,date:'2025-10-01',name:'Yoyo',shift:'Pagi',bodyPart:'Mata',incident:'Terkena serpihan besi',chronology:'Pada saat memotong besi di bengkel, serpihan masuk ke mata kanan dan korban dibawa ke RS Cicendo.',department:'MTC Loom',area:'MTC Loom',cause:'Human Error'},
+{no:19,date:'2025-11-01',name:'Sandi Hermawan',shift:'Pagi',bodyPart:'Mata',incident:'Terbentur kunci',chronology:'Saat mengencangkan baut beam di mesin E15, kunci L10 meleset dan mengenai mata kanan bagian bawah.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'},
+{no:20,date:'2026-06-01',name:'Moch Muhdor Zaelani',shift:'Siang',bodyPart:'Jari Tangan',incident:'Teriris gunting',chronology:'Saat mencabut paku leno menggunakan gunting, gunting mengenai ibu jari kanan hingga terluka dan korban dirujuk.',department:'Produksi Loom',area:'Produksi Loom',cause:'Human Error'}
+];
+const seedP2K3=[
+{month:'Januari',employees:279,workingDays:27,effectiveHours:7,totalHours:52731,incidents:0,lostDays:0},
+{month:'Februari',employees:279,workingDays:28,effectiveHours:7,totalHours:54684,incidents:0,lostDays:0},
+{month:'Maret',employees:283,workingDays:20,effectiveHours:7,totalHours:39620,incidents:0,lostDays:0},
+{month:'April',employees:286,workingDays:30,effectiveHours:7,totalHours:60060,incidents:0,lostDays:0},
+{month:'Mei',employees:288,workingDays:29,effectiveHours:7,totalHours:58464,incidents:0,lostDays:0},
+{month:'Juni',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:1,lostDays:0},
+{month:'Juli',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:0,lostDays:0},
+{month:'Agustus',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:0,lostDays:0},
+{month:'September',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:0,lostDays:0},
+{month:'Oktober',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:0,lostDays:0},
+{month:'November',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:0,lostDays:0},
+{month:'Desember',employees:'',workingDays:'',effectiveHours:'',totalHours:'',incidents:0,lostDays:0}
+];
+const defaultMaster={
+  departments:['Produksi Loom','MTC Loom','Persiapan','MTC Persiapan','MTC Elektrik','LIA','LAIN-LAIN'],
+  areas:['Produksi Loom','Persiapan','MTC Loom','Lab Benang','Datalog','Administrasi'],
+  shifts:['Pagi','Siang','Malam'],
+  bodyParts:['Jari Tangan','Tangan','Jari Kaki','Kaki','Mata','Kepala','Dada','Hidung'],
+  causes:['Human Error','Infrastructure','Unsafe Action','Unsafe Condition','Machine','Method','Material'],
+  nearMissCategories:['Unsafe Action','Unsafe Condition','Infrastructure','Machine','Housekeeping','PPE'],
+  statuses:['Open','In Progress','Closed'],
+  priorities:['Low','Medium','High','Critical'],
+  machines:['Warping','Sizing','Leasing','Beam Truck','Loom A','Loom B','Loom C','Travel Cleaner','Cooker']
+};
+const LS='weavingSafetyV1';
+const SUPABASE_URL='https://hmvoxjryixmdtuszckox.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_Xoafwl9uuvcNjL7O5OjjQw_3mwMlGGr';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let state=JSON.parse(localStorage.getItem(LS)||'null')||{accidents:seedAccidents,nearmiss:[],actions:[],p2k3:seedP2K3,investigations:[],inspections:[],master:defaultMaster};
+state.investigations=state.investigations||[];
+state.inspections=state.inspections||[];
+state.p2k3=(state.p2k3||[]).map(r=>({...r,year:Number(r.year||2026),effectiveHours:Number(r.effectiveHours||7)}));
+let charts={}; let importBuffer=null; let currentActionFilter='all';
+let cloudUser=null, cloudReady=false, cloudSaveTimer=null, cloudSaveChain=Promise.resolve();
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function setCloudStatus(message,ok=false){const el=$('#cloudStatus');if(el)el.innerHTML=`<strong>${ok?'● ':'○ '}${esc(message)}</strong>`;const label=$('#storageLabel');if(label)label.textContent=ok?'Data tersimpan di cloud':'Sinkronisasi cloud';}
+function normalizeState(value){const base={accidents:seedAccidents,nearmiss:[],actions:[],p2k3:seedP2K3,investigations:[],inspections:[],master:defaultMaster};const next={...base,...(value||{})};next.investigations=next.investigations||[];next.inspections=next.inspections||[];next.master=next.master||defaultMaster;next.p2k3=(next.p2k3||[]).map(r=>({...r,year:Number(r.year||2026),effectiveHours:Number(r.effectiveHours||7)}));return next;}
+
+let viewerMode=false;
+let publicRefreshTimer=null;
+let publicChannel=null;
+async function loadCloudState(user){
+  setCloudStatus('Mengambil data cloud…');
+  const {data,error}=await supabaseClient.from('weaving_safety_state').select('payload,updated_at').eq('user_id',user.id).maybeSingle();
+  if(error)throw error;
+  if(data&&data.payload){
+    state=normalizeState(data.payload);
+    localStorage.setItem(LS,JSON.stringify(state));
+    setCloudStatus('Terhubung · data dimuat',true);
+  }else{
+    state=normalizeState(state);
+    const {error:saveError}=await supabaseClient.from('weaving_safety_state').upsert({user_id:user.id,payload:state,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+    if(saveError)throw saveError;
+    localStorage.setItem(LS,JSON.stringify(state));
+    setCloudStatus('Data awal dipindahkan ke cloud',true);
+  }
+  initFilters();renderAll();
+}
+async function loadPublicCloudState(showLoading=false){
+  if(showLoading)setCloudStatus('Mengambil data cloud publik…');
+  const {data,error}=await supabaseClient.from('weaving_safety_state').select('payload,updated_at').order('updated_at',{ascending:false}).limit(1).maybeSingle();
+  if(error)throw error;
+  if(!data||!data.payload)throw new Error('Data cloud belum tersedia. Hubungi administrator.');
+  const incoming=normalizeState(data.payload);
+  const stamp=data.updated_at||'';
+  if(stamp!==window.__publicCloudStamp){
+    state=incoming;
+    window.__publicCloudStamp=stamp;
+    localStorage.setItem(LS,JSON.stringify(state));
+    initFilters();renderAll();
+  }
+  setCloudStatus('Viewer publik · update '+new Date(stamp).toLocaleTimeString('id-ID'),true);
+}
+async function startPublicViewer(){
+  viewerMode=true;cloudUser=null;cloudReady=false;
+  document.body.classList.add('viewer-mode');
+  $('#authGate').classList.add('hidden');
+  $('#cloudUser').textContent='VIEWER · HANYA BACA';
+  $('#viewerBanner').style.display='flex';
+  try{
+    await loadPublicCloudState(true);
+    if(publicRefreshTimer)clearInterval(publicRefreshTimer);
+    publicRefreshTimer=setInterval(()=>loadPublicCloudState(false).catch(err=>{console.error('Public refresh error:',err);setCloudStatus('Gagal memperbarui · '+(err.message||'cek koneksi'));}),15000);
+  }catch(err){
+    console.error('Public cloud load error:',err);
+    setCloudStatus('Gagal memuat data publik · '+(err.message||'periksa akses database'));
+    $('#authGate').classList.remove('hidden');
+    $('#authError').textContent='Data publik belum bisa dimuat: '+(err.message||'periksa koneksi');
+  }
+}
+function save(){
+  if(viewerMode)return;
+  localStorage.setItem(LS,JSON.stringify(state));
+  if(!cloudUser||!cloudReady)return;
+  setCloudStatus('Menyimpan perubahan…');clearTimeout(cloudSaveTimer);
+  cloudSaveTimer=setTimeout(()=>{const snapshot=JSON.parse(JSON.stringify(state));cloudSaveChain=cloudSaveChain.then(async()=>{const {error}=await supabaseClient.from('weaving_safety_state').upsert({user_id:cloudUser.id,payload:snapshot,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error)throw error;setCloudStatus('Tersinkron ke cloud',true);}).catch(err=>{console.error('Supabase save error:',err);setCloudStatus('Gagal menyimpan · '+(err.message||'periksa koneksi'));});},500);
+}
+async function startCloudSession(session){
+  cloudUser=session?.user||null;cloudReady=false;viewerMode=false;
+  document.body.classList.remove('viewer-mode');$('#viewerBanner').style.display='none';
+  if(!cloudUser){await startPublicViewer();return;}
+  $('#authGate').classList.add('hidden');$('#cloudUser').textContent=cloudUser.email||'Akun aktif';
+  if(publicRefreshTimer){clearInterval(publicRefreshTimer);publicRefreshTimer=null;}
+  try{await loadCloudState(cloudUser);cloudReady=true;}
+  catch(err){console.error('Supabase load error:',err);setCloudStatus('Gagal memuat data · '+(err.message||'periksa koneksi'));$('#authGate').classList.remove('hidden');$('#authError').textContent='Tidak bisa mengambil data cloud: '+(err.message||'periksa koneksi / akses database');}
+}
+$('#editorLoginBtn').addEventListener('click',()=>{$('#authError').textContent='';$('#authGate').classList.remove('hidden');$('#authEmail').focus();});
+$('#backViewerBtn').addEventListener('click',()=>{$('#authGate').classList.add('hidden');startPublicViewer();});
+$('#authForm').addEventListener('submit',async e=>{e.preventDefault();$('#authError').textContent='';$('#loginBtn').disabled=true;$('#loginBtn').textContent='Memproses…';try{const {data,error}=await supabaseClient.auth.signInWithPassword({email:$('#authEmail').value.trim(),password:$('#authPassword').value});if(error)throw error;await startCloudSession(data.session);}catch(err){$('#authError').textContent=err.message||'Login gagal';}finally{$('#loginBtn').disabled=false;$('#loginBtn').textContent='Masuk';}});
+$('#logoutBtn').addEventListener('click',async()=>{cloudReady=false;await supabaseClient.auth.signOut();cloudUser=null;await startPublicViewer();});
+supabaseClient.auth.onAuthStateChange((_event,session)=>{if(session?.user&&session.user.id!==cloudUser?.id){setTimeout(()=>startCloudSession(session),0);}else if(!session){cloudUser=null;cloudReady=false;setTimeout(()=>startPublicViewer(),0);}});
+(async()=>{const {data,error}=await supabaseClient.auth.getSession();if(error){$('#authError').textContent=error.message;await startPublicViewer();return;}if(data.session)await startCloudSession(data.session);else await startPublicViewer();})();
+
+document.addEventListener('click',function(e){
+  if(!viewerMode)return;
+  const b=e.target.closest('button');
+  if(!b)return;
+  if(b.matches('.nav-item,#themeBtn,#menuBtn,#resetFilter,#editorLoginBtn,#loginBtn,#backViewerBtn'))return;
+  e.preventDefault();e.stopImmediatePropagation();
+},true);
+document.addEventListener('submit',function(e){if(viewerMode&&e.target.id!=='authForm'){e.preventDefault();e.stopImmediatePropagation();}},true);
+function esc(v=''){return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+function fmtDate(d){if(!d)return '-';return new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(d+'T00:00:00'));}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function go(page){$$('.page').forEach(x=>x.classList.remove('active'));$('#'+page).classList.add('active');$$('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.page===page));const meta={dashboard:['Dashboard','Ringkasan keselamatan Departemen Weaving'],accidents:['Kecelakaan Kerja','Database kecelakaan kerja Departemen Weaving'],nearmiss:['Near Miss','Pelaporan kondisi dan tindakan tidak aman'],actions:['Corrective Action','Pemantauan tindak lanjut dan evidence'],safety:['Safety Management','Investigasi, inspeksi, dan laporan keselamatan'],p2k3:['P2K3 Monitoring','Indikator kinerja keselamatan kerja'],master:['Master Data','Pengaturan pilihan dan referensi sistem'],datahub:['Import & Export','Pertukaran data dengan Microsoft Excel']}[page];$('#pageTitle').textContent=meta[0];$('#pageSubtitle').textContent=meta[1];document.querySelector('.sidebar').classList.remove('open');renderAll();}
+$$('.nav-item').forEach(b=>b.onclick=()=>go(b.dataset.page));$$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));$('#menuBtn').onclick=()=>document.querySelector('.sidebar').classList.toggle('open');$('#themeBtn').onclick=()=>document.body.classList.toggle('dark');
+function filteredAccidents(){const y=$('#yearFilter').value,d=$('#deptFilter').value,s=$('#shiftFilter').value;return state.accidents.filter(x=>(!y||x.date.startsWith(y))&&(!d||x.department===d)&&(!s||x.shift===s));}
+function countBy(rows,key){return rows.reduce((a,x)=>(a[x[key]||'Tidak diisi']=(a[x[key]||'Tidak diisi']||0)+1,a),{});}
+const valueLabelsPlugin={id:'valueLabels',afterDatasetsDraw(chart){const{ctx}=chart;ctx.save();ctx.textAlign='center';ctx.textBaseline='bottom';ctx.font='600 12px system-ui';ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--text').trim()||'#24332e';chart.data.datasets.forEach((dataset,di)=>{const meta=chart.getDatasetMeta(di);meta.data.forEach((bar,i)=>{const value=dataset.data[i];if(value!==null&&value!==undefined)ctx.fillText(value+' kejadian',bar.x,bar.y-6);});});ctx.restore();}};
+function chart(id,type,labels,data,opts={},plugins=[]){if(charts[id])charts[id].destroy();const ctx=document.getElementById(id);charts[id]=new Chart(ctx,{type,data:{labels,datasets:data},plugins,options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:8}}},scales:type==='doughnut'?{}:{x:{grid:{display:false}},y:{beginAtZero:true,ticks:{precision:0},grid:{color:'rgba(130,150,142,.12)'}}},...opts}});}
+function normalizeBodyPart(v){const s=String(v||'').toLowerCase();if(s.includes('jari tangan')||s==='tangan')return'Tangan';if(s.includes('jari kaki')||s==='kaki')return'Kaki';if(s.includes('mata'))return'Mata';if(s.includes('kepala')||s.includes('hidung'))return'Kepala / Wajah';if(s.includes('dada')||s.includes('punggung')||s.includes('badan'))return'Badan';return'Bagian lain';}
+function bodyMapMarkup(rows){const groups=['Tangan','Kaki','Mata','Kepala / Wajah','Badan','Bagian lain'];const counts=Object.fromEntries(groups.map(g=>[g,0]));rows.forEach(x=>counts[normalizeBodyPart(x.bodyPart)]++);const total=rows.length;const top=[...groups].sort((a,b)=>counts[b]-counts[a])[0];const pct=total?Math.round(counts[top]/total*100):0;const zones={Tangan:'hand',Kaki:'leg',Mata:'eye','Kepala / Wajah':'head',Badan:'body','Bagian lain':'other'};return`<div class="bodymap"><div class="bodymap-figure"><svg viewBox="0 0 220 320" aria-label="Ilustrasi bagian tubuh terdampak"><ellipse cx="110" cy="306" rx="72" ry="7" fill="rgba(139,117,101,.10)"/><circle class="body-zone bodymap-skin" data-zone="head" cx="110" cy="45" r="27"/><path class="body-zone bodymap-skin" data-zone="head" d="M85 48 Q82 67 94 77 L126 77 Q138 67 135 48 Q128 64 110 66 Q92 64 85 48Z"/><path class="body-zone bodymap-shirt" data-zone="body" d="M79 83 Q91 75 110 75 Q129 75 141 83 L151 157 Q136 168 110 166 Q84 168 69 157Z"/><path class="body-zone bodymap-shirt" data-zone="body" d="M73 89 L49 105 Q42 110 46 120 L66 158 L80 151 L67 119 L83 111Z"/><path class="body-zone bodymap-shirt" data-zone="body" d="M147 89 L171 105 Q178 110 174 120 L154 158 L140 151 L153 119 L137 111Z"/><circle class="body-zone bodymap-skin" data-zone="hand" cx="57" cy="165" r="10"/><circle class="body-zone bodymap-skin" data-zone="hand" cx="163" cy="165" r="10"/><path class="body-zone bodymap-pants" data-zone="leg" d="M79 158 Q110 165 141 158 L135 236 L115 236 L108 183 L102 236 L82 236Z"/><path class="body-zone bodymap-pants" data-zone="leg" d="M82 229 L108 229 L106 286 L90 286Z"/><path class="body-zone bodymap-pants" data-zone="leg" d="M115 229 L138 229 L130 286 L114 286Z"/><ellipse class="body-zone bodymap-skin" data-zone="other" cx="96" cy="293" rx="13" ry="7"/><ellipse class="body-zone bodymap-skin" data-zone="other" cx="123" cy="293" rx="13" ry="7"/><circle class="body-zone bodymap-skin" data-zone="eye" cx="101" cy="44" r="3.2"/><circle class="body-zone bodymap-skin" data-zone="eye" cx="119" cy="44" r="3.2"/></svg></div><div class="bodymap-side">${groups.map(g=>`<div class="body-stat ${g===top?'active':''}" data-body-stat="${esc(g)}"><span class="body-stat-label"><i class="body-stat-dot"></i>${esc(g)}</span><strong>${counts[g]}</strong></div>`).join('')}</div><div class="bodymap-highlight"><div><small>Paling sering terdampak</small><b>${esc(top)} · ${counts[top]} kejadian</b></div><span class="percent">${pct}%</span></div></div>`;}
+function renderBodyPartMap(rows){const el=$('#bodyPartMap');if(!el)return;el.innerHTML=bodyMapMarkup(rows);const stats=$$('[data-body-stat]');stats.forEach(st=>st.onclick=()=>{stats.forEach(x=>x.classList.remove('active'));st.classList.add('active');const group=st.dataset.bodyStat;$$('.body-zone').forEach(z=>z.classList.toggle('active',z.dataset.zone===({Tangan:'hand',Kaki:'leg',Mata:'eye','Kepala / Wajah':'head',Badan:'body','Bagian lain':'other'})[group]));});const top=[...stats].sort((a,b)=>Number(b.querySelector('strong').textContent)-Number(a.querySelector('strong').textContent))[0];if(top)top.click();}
+
+function renderSafetyInsight(){
+  const el = document.getElementById('safetyInsight');
+  if(!el) return;
+  const accidents = typeof filteredAccidents === 'function' ? filteredAccidents() : (state.accidents || []);
+  const nearMisses = state.nearMisses || [];
+  const actions = state.correctiveActions || state.actions || [];
+  const inspections = state.inspections || [];
+  const investigations = state.investigations || [];
+  const openAction = actions.filter(x => !['Closed','Completed','Selesai','close','completed'].includes(String(x.status||''))).length;
+  const overdue = inspections.filter(x => {
+    const status = String(x.status||'').toLowerCase();
+    if(['closed','completed','selesai'].includes(status)) return false;
+    return x.deadline && new Date(x.deadline) < new Date();
+  }).length;
+  const total = accidents.length + nearMisses.length + openAction + overdue;
+  const status = document.getElementById('siStatus');
+  const message = document.getElementById('siMessage');
+  const priority = document.getElementById('siPriority');
+  document.getElementById('siAccident').textContent = accidents.length;
+  document.getElementById('siNearMiss').textContent = nearMisses.length;
+  document.getElementById('siOpenAction').textContent = openAction;
+  document.getElementById('siOverdue').textContent = overdue;
+  el.classList.remove('good','warn','bad');
+
+  if(!total){
+    status.textContent='● Belum cukup data';
+    message.textContent='Belum ada data kejadian atau tindak lanjut pada periode/filter yang dipilih. Pastikan pencatatan kecelakaan, near miss, inspeksi, dan corrective action sudah diperbarui.';
+    priority.textContent='Mulai dari memastikan seluruh kejadian dan temuan sudah tercatat.';
+    return;
+  }
+
+  let level='good', label='● Terkendali';
+  if(accidents.length>0 || overdue>0){ level='bad'; label='● Waspada'; }
+  else if(nearMisses.length>0 || openAction>0){ level='warn'; label='● Perlu perhatian'; }
+  el.classList.add(level);
+  status.textContent=label;
+
+  const parts=[];
+  if(accidents.length) parts.push('terdapat '+accidents.length+' kecelakaan kerja');
+  else parts.push('tidak terdapat kecelakaan kerja yang tercatat');
+  if(nearMisses.length) parts.push(nearMisses.length+' near miss perlu dipantau');
+  if(openAction) parts.push(openAction+' corrective action masih open');
+  if(overdue) parts.push(overdue+' temuan inspeksi telah melewati deadline');
+  message.textContent='Berdasarkan data pada filter saat ini, posisi keselamatan Weaving '+(level==='good'?'relatif terkendali':level==='warn'?'perlu perhatian':'berada dalam kondisi waspada')+'. '+parts.join(', ')+'. Fokuskan evaluasi pada tren kejadian, penyelesaian tindakan, dan risiko yang berulang.';
+  if(overdue) priority.textContent='Tindak lanjuti temuan inspeksi yang overdue terlebih dahulu.';
+  else if(accidents.length) priority.textContent='Periksa hasil investigasi akar penyebab dan pastikan rekomendasi kecelakaan ditutup.';
+  else if(openAction) priority.textContent='Percepat penyelesaian corrective action yang masih open.';
+  else if(nearMisses.length) priority.textContent='Review near miss dan lakukan tindakan pencegahan sebelum menjadi kecelakaan.';
+  else priority.textContent='Pertahankan pengendalian dan lakukan monitoring rutin.';
+}
+
+function renderDashboard(){
+  const rows=filteredAccidents(), nm=state.nearmiss, actions=state.actions;
+  renderBodyPartMap(rows);
+  $('#kpiAccidents').textContent=rows.length;$('#kpiAccidentNote').textContent=$('#yearFilter').value?`Tahun ${$('#yearFilter').value}`:'Semua periode';$('#kpiNearmiss').textContent=nm.length;
+  const closed=actions.filter(x=>x.status==='Closed').length, completion=actions.length?Math.round(closed/actions.length*100):0;$('#kpiCompletion').textContent=completion+'%';$('#kpiActionNote').textContent=`${actions.filter(x=>x.status!=='Closed').length} action terbuka`;
+  const latest=[...state.accidents].sort((a,b)=>b.date.localeCompare(a.date))[0];$('#kpiDays').textContent=latest?Math.max(0,Math.floor((new Date()-new Date(latest.date+'T00:00:00'))/86400000)):0;
+  const selectedDept=$('#deptFilter').value, selectedShift=$('#shiftFilter').value;
+  const annualRows=state.accidents.filter(x=>(!selectedDept||x.department===selectedDept)&&(!selectedShift||x.shift===selectedShift));
+  const annualYears=[...new Set(state.accidents.map(x=>x.date?.slice(0,4)).filter(Boolean))].sort();
+  const annualCounts=annualYears.map(y=>annualRows.filter(x=>x.date?.startsWith(y)).length);
+  $('#annualTrendNote').textContent=selectedDept?`Total kejadian ${selectedDept} per tahun`:'Total kejadian seluruh bagian per tahun';
+  chart('dashboardAnnualTrendChart','bar',annualYears,[{label:'Kejadian',data:annualCounts,backgroundColor:'#176b55',borderRadius:8}],{layout:'vertical',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0},grid:{color:'rgba(130,150,142,.12)'}},y:{grid:{display:false}}}},[valueLabelsPlugin]);
+  const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];const year=$('#yearFilter').value||'2026';
+  const accMonths=months.map((_,i)=>rows.filter(x=>new Date(x.date+'T00:00:00').getMonth()===i).length);const nmMonths=months.map((_,i)=>nm.filter(x=>x.date?.startsWith(year)&&new Date(x.date+'T00:00:00').getMonth()===i).length);
+  chart('trendChart','line',months,[{label:'Kecelakaan',data:accMonths,borderColor:'#d14343',backgroundColor:'rgba(209,67,67,.10)',fill:true,tension:.35},{label:'Near Miss',data:nmMonths,borderColor:'#c98215',backgroundColor:'rgba(201,130,21,.08)',fill:true,tension:.35}]);
+  const causes=countBy(rows,'cause');chart('causeChart','doughnut',Object.keys(causes),[{data:Object.values(causes),backgroundColor:['#176b55','#d8a02c','#d14343','#4b82c4','#8b6ac8','#70938a']}],{cutout:'68%'});
+  const deps=countBy(rows,'department');chart('deptChart','bar',Object.keys(deps),[{label:'Kejadian',data:Object.values(deps),backgroundColor:'#176b55',borderRadius:6}],{indexAxis:'y',plugins:{legend:{display:false}}});
+  const shifts=countBy(rows,'shift');chart('shiftChart','doughnut',Object.keys(shifts),[{data:Object.values(shifts),backgroundColor:['#176b55','#d8a02c','#4b82c4']}],{cutout:'62%'});
+  const urgent=[...actions].filter(x=>x.status!=='Closed').sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999')).slice(0,4);$('#priorityList').innerHTML=urgent.length?urgent.map(x=>`<div class="priority-item"><span class="badge ${x.status==='In Progress'?'progress':'open'}">${esc(x.status)}</span><strong>${esc(x.title)}</strong><small><span>${esc(x.pic||'-')}</span><span>${fmtDate(x.dueDate)}</span></small></div>`).join(''):'<div class="empty" style="padding:35px 10px"><p>Belum ada corrective action.</p></div>';
+  $('#recentAccidents').innerHTML=[...rows].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6).map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.name)}</td><td>${esc(x.department)}</td><td>${esc(x.incident)}</td><td>${esc(x.shift)}</td><td><span class="badge ${x.cause==='Infrastructure'?'progress':'open'}">${esc(x.cause)}</span></td></tr>`).join('');
+  renderSafetyInsight();
+}
+function renderAccidents(){const q=($('#accidentSearch')?.value||'').toLowerCase();const rows=state.accidents.filter(x=>JSON.stringify(x).toLowerCase().includes(q));$('#accidentTable').innerHTML=rows.map((x,i)=>`<tr><td>${i+1}</td><td>${fmtDate(x.date)}</td><td>${esc(x.name)}</td><td>${esc(x.shift)}</td><td>${esc(x.bodyPart)}</td><td title="${esc(x.chronology)}">${esc(x.incident)}</td><td>${esc(x.department)}</td><td>${esc(x.area)}</td><td>${esc(x.cause)}</td><td class="row-actions"><button onclick="editRecord('accident',${i})">✎</button><button onclick="deleteRecord('accident',${i})">⌫</button></td></tr>`).join('');}
+function renderNearmiss(){const q=($('#nearmissSearch')?.value||'').toLowerCase();const rows=state.nearmiss.filter(x=>JSON.stringify(x).toLowerCase().includes(q));$('#nmTotal').textContent=state.nearmiss.length;$('#nmOpen').textContent=state.nearmiss.filter(x=>x.status==='Open').length;$('#nmClosed').textContent=state.nearmiss.filter(x=>x.status==='Closed').length;$('#nmOverdue').textContent=state.nearmiss.filter(x=>x.status!=='Closed'&&x.dueDate&&new Date(x.dueDate)<new Date()).length;$('#emptyNearmiss').classList.toggle('hidden',state.nearmiss.length>0);$('#nearmissTableWrap').classList.toggle('hidden',state.nearmiss.length===0);$('#nearmissTable').innerHTML=rows.map((x,i)=>`<tr><td>${x.number||i+1}</td><td>${fmtDate(x.date)}</td><td>${esc(x.department)}</td><td>${esc(x.area)}</td><td>${esc(x.category)}</td><td title="${esc(x.chronology)}">${esc(x.chronology)}</td><td>${esc(x.pic||'-')}</td><td>${fmtDate(x.dueDate)}</td><td><span class="badge ${x.status==='Closed'?'closed':x.status==='In Progress'?'progress':'open'}">${esc(x.status)}</span></td><td><button onclick="editRecord('nearmiss',${i})">✎</button></td></tr>`).join('');}
+function renderActions(){const rows=state.actions.filter(x=>currentActionFilter==='all'||x.status===currentActionFilter);$('#actionBoard').innerHTML=rows.length?rows.map((x,i)=>`<article class="action-card"><span class="badge ${x.status==='Closed'?'closed':x.status==='In Progress'?'progress':'open'}">${esc(x.status)}</span><h3>${esc(x.title)}</h3><p>${esc(x.description||'')}</p><div class="progressbar"><span style="width:${Number(x.progress||0)}%"></span></div><div class="action-meta"><span>PIC: ${esc(x.pic||'-')}</span><span>${fmtDate(x.dueDate)}</span></div><div class="row-actions" style="text-align:right;margin-top:10px"><button onclick="editRecord('action',${i})">Edit</button></div></article>`).join(''):'<article class="card empty"><div>✓</div><h3>Belum ada corrective action</h3><p>Action dari near miss dan kecelakaan akan muncul di sini.</p></article>';}
+function calcP2(r){
+  const employees=Number(r.employees||0),days=Number(r.workingDays||0),effective=Number(r.effectiveHours||0);
+  const calculatedHours=employees*days*effective;
+  const h=calculatedHours||Number(r.totalHours||0),i=Number(r.incidents||0),d=Number(r.lostDays||0);
+  return{totalHours:h,fr:h?i*1e6/h:0,sr:h?d*1e6/h:0,ir:employees?i*100/employees:0,atlr:i?d/i:0};
+}
+const monthOrder=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+let p2k3EditIndex=null;
+function annualP2K3Summary(){
+  const grouped={};
+  state.p2k3.forEach(r=>{
+    const year=Number(r.year||2026), c=calcP2(r);
+    if(!grouped[year])grouped[year]={year,months:0,employeeTotal:0,totalHours:0,incidents:0,lostDays:0};
+    const g=grouped[year];
+    g.months+=1;g.employeeTotal+=Number(r.employees||0);g.totalHours+=c.totalHours;g.incidents+=Number(r.incidents||0);g.lostDays+=Number(r.lostDays||0);
+  });
+  return Object.values(grouped).sort((a,b)=>a.year-b.year).map(g=>{
+    const avgEmployees=g.months?g.employeeTotal/g.months:0;
+    return {...g,avgEmployees,fr:g.totalHours?g.incidents*1e6/g.totalHours:0,sr:g.totalHours?g.lostDays*1e6/g.totalHours:0,ir:avgEmployees?g.incidents*100/avgEmployees:0,atlr:g.incidents?g.lostDays/g.incidents:0};
+  });
+}
+function renderP2K3AccidentTrend(){
+  const selectedDept=$('#p2k3DeptTrendFilter')?.value||'';
+  const rows=state.accidents.filter(x=>!selectedDept||x.department===selectedDept);
+  const years=[...new Set(state.accidents.map(x=>x.date?.slice(0,4)).filter(Boolean))].sort();
+  const counts=years.map(y=>rows.filter(x=>x.date?.startsWith(y)).length);
+  const note=$('#p2k3AnnualTrendNote');
+  if(note)note.textContent=selectedDept?`Jumlah kejadian ${selectedDept} per tahun`:'Total kejadian seluruh bagian per tahun';
+  chart('p2k3DeptAnnualChart','bar',years,[{label:'Kejadian',data:counts,backgroundColor:'#176b55',borderRadius:8}],{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}},[valueLabelsPlugin]);
+}
+function renderAnnualP2K3(){
+  renderP2K3AccidentTrend();
+  const annual=annualP2K3Summary();
+  const labels=annual.map(x=>String(x.year));
+  chart('annualIncidentChart','line',labels,[
+    {label:'Kecelakaan',data:annual.map(x=>x.incidents),borderColor:'#d14343',backgroundColor:'rgba(209,67,67,.10)',fill:true,tension:.3},
+    {label:'Hari Hilang',data:annual.map(x=>x.lostDays),borderColor:'#d8a02c',backgroundColor:'rgba(216,160,44,.08)',fill:true,tension:.3}
+  ]);
+  chart('annualRateChart','line',labels,[
+    {label:'FR',data:annual.map(x=>Number(x.fr.toFixed(2))),borderColor:'#176b55',tension:.3},
+    {label:'SR',data:annual.map(x=>Number(x.sr.toFixed(2))),borderColor:'#d14343',tension:.3},
+    {label:'IR',data:annual.map(x=>Number(x.ir.toFixed(2))),borderColor:'#4b82c4',tension:.3},
+    {label:'ATLR',data:annual.map(x=>Number(x.atlr.toFixed(2))),borderColor:'#8b6ac8',tension:.3}
+  ],{scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:'rgba(130,150,142,.12)'}}}});
+  $('#annualP2K3Table').innerHTML=annual.length?annual.map(x=>`<tr><td><strong>${x.year}</strong></td><td>${x.avgEmployees.toLocaleString('id-ID',{maximumFractionDigits:1})}</td><td>${x.totalHours.toLocaleString('id-ID',{maximumFractionDigits:2})}</td><td>${x.incidents}</td><td>${x.lostDays}</td><td>${x.fr.toFixed(2)}</td><td>${x.sr.toFixed(2)}</td><td>${x.ir.toFixed(2)}</td><td>${x.atlr.toFixed(2)}</td></tr>`).join(''):'<tr><td colspan="9"><div class="empty compact"><p>Belum ada data tahunan.</p></div></td></tr>';
+}
+function renderP2K3(){
+  const rows=state.p2k3.map((r,i)=>({...r,_index:i})).sort((a,b)=>(Number(b.year||2026)-Number(a.year||2026))||(monthOrder.indexOf(a.month)-monthOrder.indexOf(b.month)));
+  $('#p2k3Table').innerHTML=rows.length?rows.map(r=>{const c=calcP2(r);return`<tr>
+    <td><strong>${esc(r.month)}</strong><br><small>${r.year||2026}</small></td>
+    <td>${Number(r.employees||0).toLocaleString('id-ID')}</td><td>${Number(r.workingDays||0).toLocaleString('id-ID')}</td><td>${Number(r.effectiveHours||0).toLocaleString('id-ID')}</td>
+    <td><strong>${c.totalHours.toLocaleString('id-ID',{maximumFractionDigits:2})}</strong></td>
+    <td>${Number(r.incidents||0)}</td><td>${Number(r.lostDays||0)}</td><td>${c.fr.toFixed(2)}</td><td>${c.sr.toFixed(2)}</td><td>${c.ir.toFixed(2)}</td><td>${c.atlr.toFixed(2)}</td>
+    <td><div class="table-actions"><button class="mini-btn" onclick="editP2K3(${r._index})">Edit</button><button class="mini-btn danger-text" onclick="deleteP2K3(${r._index})">Hapus</button></div></td>
+  </tr>`}).join(''):'<tr><td colspan="12"><div class="empty compact"><h3>Belum ada data monitoring</h3><p>Klik “Input Monitoring” untuk menambahkan data bulanan.</p></div></td></tr>';
+  renderAnnualP2K3();
+}
+function updateP2K3Preview(){
+  const f=$('#p2k3Form'); if(!f)return;
+  const employees=Number(f.elements.employees.value||0),days=Number(f.elements.workingDays.value||0),hours=Number(f.elements.effectiveHours.value||0);
+  $('#p2k3HoursPreview').textContent=(employees*days*hours).toLocaleString('id-ID',{maximumFractionDigits:2})+' jam';
+}
+function openP2K3(index=null){
+  p2k3EditIndex=index; const f=$('#p2k3Form'); f.reset(); f.elements.effectiveHours.value=7; f.elements.year.value=new Date().getFullYear();
+  $('#p2k3ModalTitle').textContent=index===null?'Input Monitoring K3':'Edit Monitoring K3';
+  if(index!==null){const r=state.p2k3[index];['year','month','employees','workingDays','effectiveHours','incidents','lostDays'].forEach(k=>{if(f.elements[k])f.elements[k].value=r[k]??(k==='year'?2026:'')});}
+  updateP2K3Preview(); $('#p2k3Modal').classList.remove('hidden');
+}
+function closeP2K3(){ $('#p2k3Modal').classList.add('hidden'); p2k3EditIndex=null; }
+window.editP2K3=i=>openP2K3(i);
+window.deleteP2K3=i=>{if(confirm('Hapus data monitoring periode ini?')){state.p2k3.splice(i,1);save();renderP2K3();toast('Data monitoring dihapus')}};
+
+const masterLabels={departments:'Bagian',areas:'Area',shifts:'Shift',bodyParts:'Lokasi Cedera',causes:'Root Cause',nearMissCategories:'Kategori Near Miss',statuses:'Status',priorities:'Prioritas',machines:'Mesin/Peralatan'};
+function renderMaster(){$('#masterGrid').innerHTML=Object.entries(state.master).map(([k,arr])=>`<article class="card master-card"><h3>${masterLabels[k]} <small>${arr.length}</small></h3><div class="master-list">${arr.map((v,i)=>`<div class="master-row"><span>${esc(v)}</span><button onclick="removeMaster('${k}',${i})">×</button></div>`).join('')}</div><div class="master-add"><input id="add_${k}" placeholder="Tambah ${masterLabels[k]}"/><button class="btn primary" onclick="addMaster('${k}')">+</button></div></article>`).join('');}
+function renderDataHub(){$('#exportAccCount').textContent=state.accidents.length+' baris';$('#exportNmCount').textContent=state.nearmiss.length+' baris';$('#exportActionCount').textContent=state.actions.length+' baris';}
+function initFilters(){const years=[...new Set(state.accidents.map(x=>x.date.slice(0,4)))].sort().reverse();$('#yearFilter').innerHTML='<option value="">Semua tahun</option>'+years.map(y=>`<option ${y==='2026'?'selected':''}>${y}</option>`).join('');$('#deptFilter').innerHTML='<option value="">Semua bagian</option>'+state.master.departments.map(x=>`<option>${x}</option>`).join('');$('#shiftFilter').innerHTML='<option value="">Semua shift</option>'+state.master.shifts.map(x=>`<option>${x}</option>`).join('');const p2=$('#p2k3DeptTrendFilter');if(p2){const current=p2.value;p2.innerHTML='<option value="">Semua bagian</option>'+state.master.departments.map(x=>`<option>${x}</option>`).join('');p2.value=current;}}
+$('#addP2K3').onclick=()=>openP2K3();
+$('#p2k3DeptTrendFilter').onchange=renderP2K3AccidentTrend;
+$('#closeP2K3Modal').onclick=closeP2K3;
+$('#cancelP2K3').onclick=closeP2K3;
+$('#p2k3Modal').onclick=e=>{if(e.target.id==='p2k3Modal')closeP2K3()};
+['employees','workingDays','effectiveHours'].forEach(n=>$('#p2k3Form').elements[n].addEventListener('input',updateP2K3Preview));
+$('#p2k3Form').onsubmit=e=>{
+  e.preventDefault(); const rec=Object.fromEntries(new FormData(e.target));
+  ['year','employees','workingDays','effectiveHours','incidents','lostDays'].forEach(k=>rec[k]=Number(rec[k]||0));
+  rec.totalHours=rec.employees*rec.workingDays*rec.effectiveHours;
+  const duplicate=state.p2k3.findIndex((r,i)=>i!==p2k3EditIndex&&String(r.year||2026)===String(rec.year)&&r.month===rec.month);
+  if(duplicate>=0&&!confirm(`Data ${rec.month} ${rec.year} sudah ada. Tetap tambahkan?`))return;
+  if(p2k3EditIndex===null)state.p2k3.push(rec);else state.p2k3[p2k3EditIndex]=rec;
+  save();renderP2K3();closeP2K3();toast('Monitoring K3 berhasil disimpan dan dihitung otomatis');
+};
+function renderAll(){renderDashboard();renderAccidents();renderNearmiss();renderActions();renderP2K3();renderMaster();renderDataHub();}
+['yearFilter','deptFilter','shiftFilter'].forEach(id=>$('#'+id).onchange=renderDashboard);$('#resetFilter').onclick=()=>{$('#yearFilter').value='2026';$('#deptFilter').value='';$('#shiftFilter').value='';renderDashboard()};$('#accidentSearch').oninput=renderAccidents;$('#nearmissSearch').oninput=renderNearmiss;
+$$('[data-action-filter]').forEach(b=>b.onclick=()=>{$$('[data-action-filter]').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentActionFilter=b.dataset.actionFilter;renderActions()});
+function field(name,label,type='text',options=[],full=false,required=false){return`<div class="form-group ${full?'full':''}"><label>${label}${required?' *':''}</label>${type==='textarea'?`<textarea name="${name}" ${required?'required':''}></textarea>`:type==='select'?`<select name="${name}" ${required?'required':''}><option value="">Pilih...</option>${options.map(x=>`<option>${esc(x)}</option>`).join('')}</select>`:`<input name="${name}" type="${type}" ${required?'required':''}/>`}</div>`}
+const forms={
+ accident:{title:'Tambah Kecelakaan Kerja',fields:()=>field('date','Tanggal','date',[],false,true)+field('name','Nama Korban','text',[],false,true)+field('shift','Shift','select',state.master.shifts,false,true)+field('bodyPart','Lokasi Tubuh Cedera','select',state.master.bodyParts,false,true)+field('incident','Kejadian','text',[],true,true)+field('chronology','Kronologi','textarea',[],true,true)+field('department','Bagian','select',state.master.departments,false,true)+field('area','Area Kecelakaan','select',state.master.areas,false,true)+field('cause','Penyebab','select',state.master.causes,false,true)},
+ nearmiss:{title:'Laporkan Near Miss',fields:()=>field('date','Tanggal','date',[],false,true)+field('time','Jam','time')+field('department','Bagian','select',state.master.departments,false,true)+field('area','Area','select',state.master.areas,false,true)+field('shift','Shift','select',state.master.shifts)+field('category','Kategori','select',state.master.nearMissCategories,false,true)+field('chronology','Kronologi','textarea',[],true,true)+field('immediateAction','Tindakan Langsung','textarea',[],true)+field('pic','PIC')+field('dueDate','Deadline','date')+field('status','Status','select',state.master.statuses)+field('priority','Prioritas','select',state.master.priorities)},
+ action:{title:'Tambah Corrective Action',fields:()=>field('title','Judul Action','text',[],true,true)+field('source','Sumber Temuan','select',['Near Miss','Kecelakaan Kerja','Safety Patrol','Audit'])+field('description','Deskripsi Tindakan','textarea',[],true,true)+field('pic','PIC','text',[],false,true)+field('dueDate','Deadline','date')+field('status','Status','select',state.master.statuses)+field('priority','Prioritas','select',state.master.priorities)+field('progress','Progress (%)','number')}
+};
+let modalMode=null,editIndex=null;
+function openForm(type,index=null){modalMode=type;editIndex=index;const f=forms[type];$('#modalTitle').textContent=f.title;$('#modalSubtitle').textContent=index===null?'Lengkapi data berikut.':'Perbarui data yang dipilih.';$('#formFields').innerHTML=f.fields();$('#modal').classList.remove('hidden');if(index!==null){const key=type==='accident'?'accidents':type==='nearmiss'?'nearmiss':'actions';const rec=state[key][index];Object.entries(rec).forEach(([k,v])=>{const el=$(`[name="${k}"]`);if(el)el.value=v??''})}else{const st=$('[name="status"]');if(st)st.value='Open';const prog=$('[name="progress"]');if(prog)prog.value=0}}
+$$('[data-add]').forEach(b=>b.onclick=()=>openForm(b.dataset.add));$$('[data-close]').forEach(b=>b.onclick=()=>$('#modal').classList.add('hidden'));window.editRecord=(t,i)=>openForm(t,i);window.deleteRecord=(t,i)=>{if(confirm('Hapus data ini?')){state[t==='accident'?'accidents':t==='nearmiss'?'nearmiss':'actions'].splice(i,1);save();renderAll();toast('Data dihapus')}};
+$('#dataForm').onsubmit=e=>{e.preventDefault();const rec=Object.fromEntries(new FormData(e.target));if(modalMode==='action')rec.progress=Math.max(0,Math.min(100,Number(rec.progress||0)));const key=modalMode==='accident'?'accidents':modalMode==='nearmiss'?'nearmiss':'actions';if(editIndex===null){if(modalMode==='accident')rec.no=state.accidents.length+1;if(modalMode==='nearmiss')rec.number='NM-'+new Date().getFullYear()+'-'+String(state.nearmiss.length+1).padStart(3,'0');state[key].push(rec)}else state[key][editIndex]=rec;save();$('#modal').classList.add('hidden');renderAll();toast('Data berhasil disimpan')};
+window.addMaster=k=>{const inp=$('#add_'+k),v=inp.value.trim();if(v&&!state.master[k].includes(v)){state.master[k].push(v);inp.value='';save();initFilters();renderAll();toast('Master data ditambahkan')}};window.removeMaster=(k,i)=>{if(confirm('Nonaktifkan/hapus pilihan ini dari master?')){state.master[k].splice(i,1);save();initFilters();renderAll()}};
+function rowsFor(type){if(type==='accidents')return state.accidents.map(x=>({'NO':x.no,'TGL':x.date,'NAMA':x.name,'WAKTU KEJADIAN (SHIFT)':x.shift,'LOKASI TUBUH YG CEDERA':x.bodyPart,'KEJADIAN KECELAKAAN':x.incident,'KRONOLOGIS':x.chronology,'BAGIAN':x.department,'AREA KECELAKAAN':x.area,'PENYEBAB':x.cause}));if(type==='nearmiss')return state.nearmiss;if(type==='actions')return state.actions;if(type==='p2k3')return state.p2k3.map(r=>({...r,totalHours:calcP2(r).totalHours,...calcP2(r)}));}
+function exportExcel(type){if(typeof XLSX==='undefined'){toast('Library Excel belum termuat. Periksa koneksi internet.');return}const wb=XLSX.utils.book_new();const add=(name,rows)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Info:'Belum ada data'}]),name);if(type==='all'){add('Kecelakaan Kerja',rowsFor('accidents'));add('Near Miss',rowsFor('nearmiss'));add('Corrective Action',rowsFor('actions'));add('P2K3 Monitoring',rowsFor('p2k3'));add('Rekap Tahunan K3',annualP2K3Summary().map(x=>({Tahun:x.year,'Rata-rata Orang':Number(x.avgEmployees.toFixed(1)),'Total Jam Kerja':x.totalHours,Kecelakaan:x.incidents,'Hari Hilang':x.lostDays,FR:Number(x.fr.toFixed(2)),SR:Number(x.sr.toFixed(2)),IR:Number(x.ir.toFixed(2)),ATLR:Number(x.atlr.toFixed(2))})));Object.entries(state.master).forEach(([k,v])=>add('Master '+masterLabels[k],v.map(x=>({Value:x}))))}else add(type==='accidents'?'Kecelakaan Kerja':type==='nearmiss'?'Near Miss':type==='actions'?'Corrective Action':'P2K3 Monitoring',rowsFor(type));XLSX.writeFile(wb,`Weaving_Safety_${type}_${new Date().toISOString().slice(0,10)}.xlsx`);toast('File Excel berhasil diekspor')}
+$$('[data-export]').forEach(b=>b.onclick=()=>exportExcel(b.dataset.export));
+const templates={accidents:[{'TGL':'2026-07-30','NAMA':'','WAKTU KEJADIAN (SHIFT)':'Pagi','LOKASI TUBUH YG CEDERA':'','KEJADIAN KECELAKAAN':'','KRONOLOGIS':'','BAGIAN':'','AREA KECELAKAAN':'','PENYEBAB':''}],nearmiss:[{date:'2026-07-30',time:'08:00',department:'',area:'',shift:'Pagi',category:'Unsafe Condition',chronology:'',immediateAction:'',pic:'',dueDate:'2026-08-06',status:'Open',priority:'Medium'}],actions:[{title:'',source:'Near Miss',description:'',pic:'',dueDate:'2026-08-06',status:'Open',priority:'Medium',progress:0}],p2k3:[{year:2026,month:'Juli',employees:0,workingDays:0,effectiveHours:7,incidents:0,lostDays:0}]};
+$('#downloadTemplate').onclick=()=>{if(typeof XLSX==='undefined')return toast('Library Excel belum termuat.');const t=$('#importType').value,wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(templates[t]),'Template');XLSX.writeFile(wb,`Template_Import_${t}.xlsx`)};
+$('#importFile').onchange=e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});const ws=wb.Sheets[wb.SheetNames[0]];let rows=XLSX.utils.sheet_to_json(ws,{defval:''});if(!rows.length)throw Error('File kosong');importBuffer={type:$('#importType').value,rows};showPreview(rows)}catch(err){toast('File tidak dapat dibaca: '+err.message)}};reader.readAsArrayBuffer(file)};
+function showPreview(rows){const cols=Object.keys(rows[0]);$('#importPreviewCard').classList.remove('hidden');$('#importSummary').textContent=`${rows.length} baris ditemukan · ${cols.length} kolom`;$('#previewHead').innerHTML='<tr>'+cols.map(c=>`<th>${esc(c)}</th>`).join('')+'</tr>';$('#previewBody').innerHTML=rows.slice(0,8).map(r=>'<tr>'+cols.map(c=>`<td>${esc(r[c] instanceof Date?r[c].toISOString().slice(0,10):r[c])}</td>`).join('')+'</tr>').join('');$('#importPreviewCard').scrollIntoView({behavior:'smooth'})}
+$('#cancelImport').onclick=()=>{$('#importPreviewCard').classList.add('hidden');importBuffer=null;$('#importFile').value=''};
+function mapImported(type,r){if(type==='accidents')return{no:state.accidents.length+1,date:String(r.TGL||r.date||'').slice(0,10),name:r.NAMA||r.name||'',shift:r['WAKTU KEJADIAN (SHIFT)']||r.shift||'',bodyPart:r['LOKASI TUBUH YG CEDERA']||r.bodyPart||'',incident:r['KEJADIAN KECELAKAAN']||r.incident||'',chronology:r.KRONOLOGIS||r.chronology||'',department:r.BAGIAN||r.department||'',area:r['AREA KECELAKAAN']||r.area||'',cause:r.PENYEBAB||r.KET||r.cause||''};return Object.fromEntries(Object.entries(r).map(([k,v])=>[k,v instanceof Date?v.toISOString().slice(0,10):v]));}
+$('#confirmImport').onclick=()=>{if(!importBuffer)return;const key=importBuffer.type==='accidents'?'accidents':importBuffer.type==='nearmiss'?'nearmiss':importBuffer.type==='actions'?'actions':'p2k3';const mapped=importBuffer.rows.map(r=>mapImported(importBuffer.type,r));state[key]=importBuffer.type==='p2k3'?mapped:[...state[key],...mapped];save();$('#importPreviewCard').classList.add('hidden');$('#importFile').value='';importBuffer=null;initFilters();renderAll();toast('Data Excel berhasil diimport')};
+initFilters();renderAll();
+
+
+/* ===== Safety Management v6 ===== */
+function smEsc(v=''){return esc(v)}
+function smId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function smRender(){
+ const today=new Date().toISOString().slice(0,10), inv=state.investigations||[], ins=state.inspections||[], acts=state.actions||[];
+ const overdue=ins.filter(x=>x.status!=='Closed'&&x.dueDate&&x.dueDate<today).length;
+ $('#smInvOpen').textContent=inv.filter(x=>x.status!=='Closed').length;
+ $('#smInsOpen').textContent=ins.filter(x=>x.status!=='Closed').length;
+ $('#smInsOverdue').textContent=overdue;
+ $('#smActionOpen').textContent=acts.filter(x=>x.status!=='Closed').length;
+ $('#investigationTable').innerHTML=inv.length?inv.slice().reverse().map((x,i)=>`<tr><td>${fmtDate(x.date)}</td><td>${smEsc(x.incident)}</td><td>${smEsc(x.rootCause)}</td><td>${smEsc(x.recommendation)}</td><td><span class="badge">${smEsc(x.status)}</span></td><td><button class="icon-btn" onclick="smDelete('investigations','${x.id}')">×</button></td></tr>`).join(''):'<tr><td colspan="6" class="muted">Belum ada investigasi.</td></tr>';
+ $('#inspectionTable').innerHTML=ins.length?ins.slice().reverse().map(x=>{const od=x.status!=='Closed'&&x.dueDate&&x.dueDate<today;return `<tr><td>${fmtDate(x.date)}</td><td>${smEsc(x.area)}</td><td>${smEsc(x.finding)}</td><td>${smEsc(x.risk)}</td><td>${smEsc(x.pic)}</td><td>${fmtDate(x.dueDate)} ${od?'<span class="badge danger">Overdue</span>':''}</td><td><span class="badge">${smEsc(x.status)}</span></td><td><button class="icon-btn" onclick="smDelete('inspections','${x.id}')">×</button></td></tr>`}).join(''):'<tr><td colspan="8" class="muted">Belum ada safety inspection.</td></tr>';
+}
+function smModal(title,html,onSave){
+ const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="modal-backdrop"></div><div class="modal-panel"><div class="modal-head"><div><h2>${title}</h2></div><button class="icon-btn smClose">×</button></div><form class="smForm"><div class="form-grid">${html}</div><div class="modal-actions"><button type="button" class="btn ghost smCancel">Batal</button><button class="btn primary">Simpan</button></div></form></div>`;document.body.appendChild(m);m.classList.remove('hidden');const close=()=>m.remove();m.querySelector('.smClose').onclick=close;m.querySelector('.smCancel').onclick=close;m.querySelector('.modal-backdrop').onclick=close;m.querySelector('form').onsubmit=e=>{e.preventDefault();onSave(Object.fromEntries(new FormData(e.target)));close();};
+}
+function smAddInv(){smModal('Investigasi Kecelakaan',field('date','Tanggal','date',[],false,true)+field('incident','Kejadian','text',[],true,true)+field('immediateCause','Immediate Cause','textarea',[],true)+field('basicCause','Basic Cause','textarea',[],true)+field('rootCause','Root Cause','textarea',[],true,true)+field('recommendation','Rekomendasi','textarea',[],true)+field('status','Status','select',state.master.statuses),d=>{state.investigations.push({id:smId(),...d});save();smRender();toast('Investigasi berhasil disimpan')});}
+function smAddInspection(){smModal('Safety Inspection',field('date','Tanggal','date',[],false,true)+field('area','Area','select',state.master.areas,false,true)+field('finding','Temuan','textarea',[],true,true)+field('risk','Risk Level','select',state.master.priorities,false,true)+field('pic','PIC','text')+field('dueDate','Deadline','date')+field('recommendation','Rekomendasi','textarea',[],true)+field('status','Status','select',state.master.statuses),d=>{state.inspections.push({id:smId(),...d});save();smRender();toast('Safety inspection berhasil disimpan')});}
+window.smDelete=(type,id)=>{if(confirm('Hapus data ini?')){state[type]=(state[type]||[]).filter(x=>x.id!==id);save();smRender();toast('Data dihapus')}};
+function smPopulateReport(){const ys=[...new Set(state.accidents.map(x=>x.date?.slice(0,4)).filter(Boolean))].sort();const y=$('#reportYear');if(y)y.innerHTML=ys.map(x=>`<option value="${x}">${x}</option>`).join('')||'<option>2026</option>';const d=$('#reportDept');if(d)d.innerHTML='<option value="">Semua bagian</option>'+state.master.departments.map(x=>`<option>${esc(x)}</option>`).join('');}
+function generateSafetyReport(){const y=$('#reportYear').value||new Date().getFullYear().toString(), mo=$('#reportMonth').value, dept=$('#reportDept').value;const rows=state.accidents.filter(x=>(!y||x.date?.startsWith(y))&&(!mo||x.date?.slice(5,7)===mo)&&(!dept||x.department===dept));const nm=state.nearmiss.filter(x=>(!y||String(x.date||'').startsWith(y))&&(!mo||String(x.date||'').slice(5,7)===mo)&&(!dept||x.department===dept));const acts=state.actions.filter(x=>x.status!=='Closed');const inv=state.investigations||[];const ins=state.inspections||[];const win=window.open('','_blank');if(!win){toast('Popup diblokir browser. Izinkan popup untuk membuat laporan.');return}win.document.write(`<!doctype html><html><head><title>Weaving Safety Monthly Report ${y}</title><style>body{font-family:Arial,sans-serif;padding:32px;color:#222}h1{margin-bottom:4px}h2{margin-top:28px;border-bottom:1px solid #ccc;padding-bottom:6px}table{border-collapse:collapse;width:100%;margin-top:10px}th,td{border:1px solid #ccc;padding:7px;text-align:left;font-size:12px}th{background:#f2f2f2}.kpi{display:inline-block;border:1px solid #ddd;padding:14px 20px;margin:5px;border-radius:8px}.kpi b{display:block;font-size:24px;margin-top:5px}@media print{button{display:none}}
+/* V7 dashboard refresh */
+:root{--bg:#f7f2ec;--panel:#fffdf9;--panel2:#f5eee7;--text:#302b28;--muted:#8b8179;--line:#e8ded4;--brand:#9b735e;--brand2:#f0e1d7;--danger:#c96d61;--danger2:#f8e5e1;--warning:#c5964f;--warning2:#f8ecd7;--info:#708da3;--info2:#e5edf2;--shadow:0 12px 34px rgba(92,66,49,.08)}
+body.dark{--bg:#171411;--panel:#211c19;--panel2:#2a2420;--text:#f5eee8;--muted:#b6a89f;--line:#403730;--brand:#d2a58b;--brand2:#3a2d27;--danger:#e28b80;--danger2:#432a27;--warning:#d4b16e;--warning2:#3b3123;--info:#91adbf;--info2:#28353d;--shadow:none}
+body{background:radial-gradient(circle at 88% 8%,rgba(218,187,163,.18),transparent 25%),var(--bg);transition:background .25s}
+.sidebar{background:linear-gradient(180deg,#30251f 0%,#211b17 100%);color:#f4e9e0}.brand-mark{background:linear-gradient(135deg,#d8b39d,#8d624d);box-shadow:0 8px 18px rgba(0,0,0,.12)}.brand small{color:#bba99d}.nav-item{color:#b9aaa0}.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.09);color:#fff}.status-dot{background:#a9c7b2}.main{padding:0 32px 46px}.topbar{height:98px}.topbar h1{font-size:26px;letter-spacing:-.02em}.topbar p{color:var(--muted)}
+.card{border-radius:20px;border-color:var(--line);box-shadow:var(--shadow);padding:21px}.card:hover{box-shadow:0 15px 40px rgba(92,66,49,.10)}.filters.card{background:rgba(255,253,249,.78);backdrop-filter:blur(8px);border-radius:18px}.kpi-grid{gap:14px;margin-bottom:18px}.kpi{min-height:108px;position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-35px;top:-35px;background:var(--brand2);opacity:.55}.kpi-icon{width:46px;height:46px;border-radius:14px;z-index:1}.kpi strong{font-size:30px;letter-spacing:-.03em}.kpi small,.kpi em{position:relative;z-index:1}.eyebrow{display:block;font-size:10px;letter-spacing:.14em;font-weight:800;color:var(--brand);margin-bottom:5px}.soft-pill{font-size:11px;font-weight:800;color:var(--brand);background:var(--brand2);padding:7px 10px;border-radius:999px}.dashboard-main-grid{align-items:stretch}.annual-card{min-height:390px}.bodymap-card{min-height:390px;overflow:hidden}.map-sparkle{width:32px;height:32px;display:grid;place-items:center;border-radius:11px;background:var(--brand2);color:var(--brand);font-size:16px}.dashboard-secondary-grid .chart-card{min-height:335px}.chart-card canvas{max-height:265px}
+.bodymap{display:grid;grid-template-columns:1fr 1.05fr;gap:10px;align-items:center;min-height:300px}.bodymap-figure{position:relative;min-height:280px;display:grid;place-items:center}.bodymap-figure svg{width:210px;max-width:100%;height:280px;overflow:visible}.bodymap-outline{fill:#ead9cc;stroke:#9f806d;stroke-width:2}.bodymap-shirt{fill:#c7a892}.bodymap-pants{fill:#a98773}.bodymap-skin{fill:#f0c9b3;stroke:#9f806d;stroke-width:1.5}.body-zone{cursor:pointer;transition:transform .18s,filter .18s,fill .18s;transform-box:fill-box;transform-origin:center}.body-zone:hover{filter:brightness(.95);transform:scale(1.08)}.body-zone.active{fill:#c97866;filter:drop-shadow(0 5px 6px rgba(174,95,77,.25))}.bodymap-side{display:grid;gap:8px}.body-stat{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:13px;background:var(--panel2);border:1px solid var(--line);cursor:pointer;transition:.18s}.body-stat:hover,.body-stat.active{transform:translateX(-2px);border-color:var(--brand);background:var(--brand2)}.body-stat-label{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}.body-stat-dot{width:8px;height:8px;border-radius:50%;background:#c8ad9b}.body-stat.active .body-stat-dot{background:var(--danger)}.body-stat strong{font-size:13px}.bodymap-highlight{grid-column:1/-1;margin-top:2px;padding:11px 13px;border-radius:14px;background:linear-gradient(135deg,var(--brand2),var(--panel2));display:flex;align-items:center;justify-content:space-between;gap:10px}.bodymap-highlight small{display:block;color:var(--muted);font-size:11px}.bodymap-highlight b{font-size:15px}.bodymap-highlight .percent{font-size:22px;color:var(--brand);font-weight:850}
+.priority-item{border-radius:14px;background:var(--panel2);border-color:var(--line);transition:.18s}.priority-item:hover{transform:translateY(-1px);border-color:var(--brand)}.table-wrap{border-radius:14px}.table-wrap table tbody tr:hover{background:var(--panel2)}
+@media(max-width:900px){.bodymap{grid-template-columns:1fr 1fr}.bodymap-figure svg{width:180px}}
+@media(max-width:760px){.main{padding:0 14px 30px}.bodymap{grid-template-columns:1fr}.bodymap-figure{min-height:250px}.bodymap-highlight{grid-column:auto}.bodymap-side{grid-row:auto}.topbar h1{font-size:22px}}
+</style></head><body><h1>WEAVING SAFETY MONTHLY REPORT</h1><p>Periode: <b>${mo||'Semua Bulan'} ${y}</b> · Bagian: <b>${dept||'Semua Bagian'}</b></p><div class="kpi">Kecelakaan<b>${rows.length}</b></div><div class="kpi">Near Miss<b>${nm.length}</b></div><div class="kpi">Action Open<b>${acts.length}</b></div><div class="kpi">Investigasi<b>${inv.length}</b></div><div class="kpi">Inspection<b>${ins.length}</b></div><h2>1. Statistik Kecelakaan</h2><table><tr><th>Tanggal</th><th>Nama</th><th>Bagian</th><th>Area</th><th>Kejadian</th><th>Penyebab</th></tr>${rows.map(x=>`<tr><td>${x.date||''}</td><td>${smEsc(x.name)}</td><td>${smEsc(x.department)}</td><td>${smEsc(x.area)}</td><td>${smEsc(x.incident)}</td><td>${smEsc(x.cause)}</td></tr>`).join('')}</table><h2>2. Near Miss</h2><p>Total: <b>${nm.length}</b></p><h2>3. Corrective Action Outstanding</h2><table><tr><th>Judul</th><th>PIC</th><th>Deadline</th><th>Status</th><th>Priority</th></tr>${acts.map(x=>`<tr><td>${smEsc(x.title)}</td><td>${smEsc(x.pic)}</td><td>${x.dueDate||''}</td><td>${smEsc(x.status)}</td><td>${smEsc(x.priority)}</td></tr>`).join('')}</table><h2>4. Kesimpulan</h2><p>Laporan ini merupakan rekap otomatis dari data Safety Management System Departemen Weaving. Tindak lanjut outstanding perlu dipantau sampai diverifikasi dan ditutup.</p><button onclick="print()">Print / Save PDF</button></body></html>`);win.document.close();}
+$('#addInvestigation')?.addEventListener('click',smAddInv);$('#addInspection')?.addEventListener('click',smAddInspection);$('#generateSafetyReport')?.addEventListener('click',generateSafetyReport);smPopulateReport();smRender();
+
+</script>
+</body>
+</html>
